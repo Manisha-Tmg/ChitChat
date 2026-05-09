@@ -67,3 +67,23 @@ export const loginUserServices = async (email: string, password: string) => {
     throw error;
   }
 };
+
+export const readAllUserServices = async () => {
+  try {
+    const users = await userModels.find();
+    return users;
+  } catch (error: any) {
+    console.log(error.message);
+    throw error;
+  }
+};
+
+export const readUserBYIdServices = async (id: string) => {
+  try {
+    const users = await userModels.findById(id);
+    return users;
+  } catch (error: any) {
+    console.log(error.message);
+    throw error;
+  }
+};

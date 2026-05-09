@@ -5,6 +5,8 @@ import {
 } from "../utils/responseHelper";
 import {
   loginUserServices,
+  readAllUserServices,
+  readUserBYIdServices,
   registerUserServices,
 } from "../services/auth.service";
 
@@ -37,6 +39,25 @@ class AuthController {
       ) {
         return sendErrorResponse(res, err.message, 400);
       }
+      return sendErrorResponse(res, "Error creating the account", 400);
+    }
+  }
+
+  static async readAllUser(req: Request, res: Response) {
+    try {
+      const user = await readAllUserServices();
+      return sendSuccessResponse(res, "User data fetched", user, 200);
+    } catch (err: any) {
+      return sendErrorResponse(res, "Error creating the account", 400);
+    }
+  }
+
+  static async readUserBYId(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const user = await readUserBYIdServices(id as string);
+      return sendSuccessResponse(res, "User data fetched", user, 200);
+    } catch (err: any) {
       return sendErrorResponse(res, "Error creating the account", 400);
     }
   }
