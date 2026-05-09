@@ -21,6 +21,6 @@ export class App {
   }
 
   private initializeRoutes() {
-    this.app.use("api/users", authRouter);
+    this.app.use("/api/users", authRouter);
   }
 }

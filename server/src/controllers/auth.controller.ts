@@ -3,14 +3,17 @@ import {
   sendErrorResponse,
   sendSuccessResponse,
 } from "../utils/responseHelper";
-import { registerUserServices } from "../services/auth.service";
+import {
+  loginUserServices,
+  registerUserServices,
+} from "../services/auth.service";
 
 class AuthController {
   static async registerUser(req: Request, res: Response) {
     try {
-      const { firtstName, lastName, email, password, profileImage } = req.body;
+      const { firstName, lastName, email, password, profileImage } = req.body;
       const user = await registerUserServices(
-        firtstName,
+        firstName,
         lastName,
         email,
         password,
@@ -18,6 +21,22 @@ class AuthController {
       );
       return sendSuccessResponse(res, "User creatied sucessfully", user, 200);
     } catch (err: any) {
+      return sendErrorResponse(res, "Error creating the account", 400);
+    }
+  }
+
+  static async loginUser(req: Request, res: Response) {
+    try {
+      const { email, password } = req.body;
+      const user = await loginUserServices(email, password);
+      return sendSuccessResponse(res, "Login sucessfull", user, 200);
+    } catch (err: any) {
+      if (
+        err.message === "USER_NOT_FOUND" ||
+        err.message === "CREDENTIALS DIDN'T MATCH"
+      ) {
+        return sendErrorResponse(res, err.message, 400);
+      }
       return sendErrorResponse(res, "Error creating the account", 400);
     }
   }

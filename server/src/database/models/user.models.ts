@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const userSchema = new Schema(
   {
-    firtstName: {
+    firstName: {
       type: String,
       required: [true, "name is required"],
     },
