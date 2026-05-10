@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import userModels from "../database/models/user.models";
+import { Role } from "../enum/Role.enum";
 
 export interface AuthRequest extends Request {
   user?: any;
@@ -48,6 +49,19 @@ class Auth {
         }
       },
     );
+  }
+
+  restrictTo(...roles: Role[]) {
+    return (req: AuthRequest, res: Response, next: NextFunction) => {
+      let userRole = req.user?.role as Role;
+      if (!roles.includes(userRole)) {
+        res.status(403).json({
+          message: "You do not have permission to perform this action",
+        });
+      } else {
+        next();
+      }
+    };
   }
 }
 
