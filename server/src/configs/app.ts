@@ -1,6 +1,6 @@
 import cors from "cors";
 import express from "express";
-import authRouter from "../routes/user.routes";
+import authRouter from "../routes/auth.routes";
 
 export class App {
   public app = express();
