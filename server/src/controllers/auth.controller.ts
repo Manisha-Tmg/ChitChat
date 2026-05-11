@@ -4,6 +4,7 @@ import {
   sendSuccessResponse,
 } from "../utils/responseHelper";
 import {
+  deleteUserServices,
   loginUserServices,
   readAllUserServices,
   readUserBYIdServices,
@@ -69,6 +70,16 @@ class AuthController {
       const id = req.user._id;
       const user = await userProfileServices(id);
       return sendSuccessResponse(res, "User profile fetched", user, 200);
+    } catch (err: any) {
+      return sendErrorResponse(res, "Error creating the account", 400);
+    }
+  }
+
+  static async deleteUserBYId(req: Request, res: Response) {
+    try {
+      const id = req.params.id;
+      const user = await deleteUserServices(id as string);
+      return sendSuccessResponse(res, "User data fetched", user, 200);
     } catch (err: any) {
       return sendErrorResponse(res, "Error creating the account", 400);
     }

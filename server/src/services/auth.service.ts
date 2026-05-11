@@ -80,7 +80,7 @@ export const readAllUserServices = async () => {
 export const userProfileServices = async (id: string) => {
   try {
     const data = await userModels.findOne({ id: id });
-    console.log(data)
+    console.log(data);
     // return { user: {first} };
   } catch (error: any) {
     console.log(error.message);
@@ -88,6 +88,16 @@ export const userProfileServices = async (id: string) => {
 };
 
 export const readUserBYIdServices = async (id: string) => {
+  try {
+    const users = await userModels.findById(id);
+    return users;
+  } catch (error: any) {
+    console.log(error.message);
+    throw error;
+  }
+};
+
+export const deleteUserServices = async (id: string) => {
   try {
     const users = await userModels.findById(id);
     return users;
