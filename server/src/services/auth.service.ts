@@ -96,13 +96,3 @@ export const readUserBYIdServices = async (id: string) => {
     throw error;
   }
 };
-
-export const deleteUserServices = async (id: string) => {
-  try {
-    const users = await userModels.findById(id);
-    return users;
-  } catch (error: any) {
-    console.log(error.message);
-    throw error;
-  }
-};
