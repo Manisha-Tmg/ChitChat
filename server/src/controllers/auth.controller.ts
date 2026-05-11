@@ -8,7 +8,9 @@ import {
   readAllUserServices,
   readUserBYIdServices,
   registerUserServices,
+  userProfileServices,
 } from "../services/auth.service";
+import { AuthRequest } from "../middleware/auth.middleware";
 
 class AuthController {
   static async registerUser(req: Request, res: Response) {
@@ -57,6 +59,16 @@ class AuthController {
       const id = req.params.id;
       const user = await readUserBYIdServices(id as string);
       return sendSuccessResponse(res, "User data fetched", user, 200);
+    } catch (err: any) {
+      return sendErrorResponse(res, "Error creating the account", 400);
+    }
+  }
+
+  static async userProfile(req: AuthRequest, res: Response) {
+    try {
+      const id = req.user._id;
+      const user = await userProfileServices(id);
+      return sendSuccessResponse(res, "User profile fetched", user, 200);
     } catch (err: any) {
       return sendErrorResponse(res, "Error creating the account", 400);
     }

@@ -1,6 +1,7 @@
 import cors from "cors";
 import express from "express";
 import authRouter from "../routes/auth.routes";
+import router from "../routes/protectedRoutes/users.routes";
 
 export class App {
   public app = express();
@@ -22,5 +23,6 @@ export class App {
 
   private initializeRoutes() {
     this.app.use("/api/users", authRouter);
+    this.app.use("/api/users/protected", router);
   }
 }

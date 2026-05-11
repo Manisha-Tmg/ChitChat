@@ -33,7 +33,6 @@ export const registerUserServices = async (
 export const loginUserServices = async (email: string, password: string) => {
   try {
     const userExist = await userModels.findOne({ email });
-    console.log(userExist);
 
     if (!userExist) {
       throw new Error("USER_NOT_FOUND");
@@ -75,6 +74,16 @@ export const readAllUserServices = async () => {
   } catch (error: any) {
     console.log(error.message);
     throw error;
+  }
+};
+
+export const userProfileServices = async (id: string) => {
+  try {
+    const data = await userModels.findOne({ id: id });
+    console.log(data)
+    // return { user: {first} };
+  } catch (error: any) {
+    console.log(error.message);
   }
 };
 

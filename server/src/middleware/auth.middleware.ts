@@ -25,6 +25,7 @@ class Auth {
       token,
       process.env.JWT_SECRET as string,
       async (err, decoded: any) => {
+        console.log(decoded._id);
         if (err) {
           res.status(403).json({
             message: "token not valid",
@@ -32,7 +33,7 @@ class Auth {
           return;
         } else {
           try {
-            const userData = await userModels.findById(decoded.id);
+            const userData = await userModels.findById(decoded._id);
             if (!userData) {
               res.status(404).json({
                 message: "user not found",
