@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
 import {
+  getAllUserServices,
   loginUserServices,
-  readAllUserServices,
   readUserBYIdServices,
   registerUserServices,
   userProfileServices,
@@ -45,12 +45,14 @@ class AuthController {
     }
   }
 
-  static async readAllUser(req: Request, res: Response) {
+  static async getAllUser(req: AuthRequest, res: Response) {
     try {
-      const user = await readAllUserServices();
-      return sendSuccessResponse(res, "User data fetched", user, 200);
+      const id = req.user._id as string;
+
+      const users = await getAllUserServices(id);
+      return sendSuccessResponse(res, "User data fetched", users, 200);
     } catch (err: any) {
-      return sendErrorResponse(res, "Error creating the account", 400);
+      return sendErrorResponse(res, err.message, 400);
     }
   }
 

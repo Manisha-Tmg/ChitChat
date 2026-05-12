@@ -67,9 +67,10 @@ export const loginUserServices = async (email: string, password: string) => {
   }
 };
 
-export const readAllUserServices = async () => {
+// display users except the one logged-In
+export const getAllUserServices = async (id: string) => {
   try {
-    const users = await userModels.find();
+    const users = await userModels.find({ _id: { $ne: id } });
     return users;
   } catch (error: any) {
     console.log(error.message);
