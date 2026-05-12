@@ -10,4 +10,10 @@ messageRouter.post(
   messageController.createMessage,
 );
 
+messageRouter.get(
+  "/get-all-messages",
+  auth.isAuthenticated,
+  messageController.getAllMessage,
+);
+
 export default messageRouter;

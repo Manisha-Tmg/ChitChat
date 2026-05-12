@@ -24,3 +24,12 @@ export const createMessageServices = async (
     throw error;
   }
 };
+
+export const getAllMessageServices = async () => {
+  try {
+    const messages = await messageModels.find();
+    return messages;
+  } catch (error) {
+    throw error;
+  }
+};
