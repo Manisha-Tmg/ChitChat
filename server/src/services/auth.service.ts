@@ -26,18 +26,16 @@ export const registerUserServices = async (
       user: { firstName, lastName, email, profileImage },
     };
   } catch (error: any) {
-    console.log(error.message);
+    throw error.message;
   }
 };
 
 export const loginUserServices = async (email: string, password: string) => {
   try {
     const userExist = await userModels.findOne({ email }).select("+password");
-    console.log(userExist);
     if (!userExist) {
       throw new Error("USER_NOT_FOUND");
     }
-    console.log(userExist.password);
     const hashedPassword = await bcrypt.compare(password, userExist.password);
 
     if (!hashedPassword) {
@@ -62,8 +60,7 @@ export const loginUserServices = async (email: string, password: string) => {
       },
     };
   } catch (error: any) {
-    console.log(error.message);
-    throw error;
+    throw error.message;
   }
 };
 
@@ -73,18 +70,15 @@ export const getAllUserServices = async (id: string) => {
     const users = await userModels.find({ _id: { $ne: id } });
     return users;
   } catch (error: any) {
-    console.log(error.message);
-    throw error;
+    throw error.message;
   }
 };
 
 export const userProfileServices = async (id: string) => {
   try {
     const data = await userModels.findOne({ id: id });
-    console.log(data);
-    // return { user: {first} };
   } catch (error: any) {
-    console.log(error.message);
+    throw error.message;
   }
 };
 
@@ -93,7 +87,6 @@ export const readUserBYIdServices = async (id: string) => {
     const users = await userModels.findById(id);
     return users;
   } catch (error: any) {
-    console.log(error.message);
-    throw error;
+    throw error.message;
   }
 };

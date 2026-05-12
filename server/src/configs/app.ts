@@ -2,7 +2,8 @@ import cors from "cors";
 import express from "express";
 import authRouter from "../routes/auth.routes";
 import router from "../routes/protectedRoutes/users.routes";
-import chatRouter from "../routes/chat.routes";
+import chatRouter from "../routes/protectedRoutes/chat.routes";
+import messageRouter from "../routes/protectedRoutes/message.routes";
 
 export class App {
   public app = express();
@@ -26,5 +27,6 @@ export class App {
     this.app.use("/api/users", authRouter);
     this.app.use("/api/users/protected", router);
     this.app.use("/api/chats/", chatRouter);
+    this.app.use("/api/messages/", messageRouter);
   }
 }
