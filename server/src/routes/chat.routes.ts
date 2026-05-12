@@ -9,5 +9,10 @@ chatRouter.post(
   auth.isAuthenticated,
   chatController.createChat,
 );
+chatRouter.get(
+  "/get-all-chats",
+  auth.isAuthenticated,
+  chatController.getAllChats,
+);
 
 export default chatRouter;
