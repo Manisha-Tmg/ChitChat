@@ -41,7 +41,7 @@ class AuthController {
       ) {
         return sendErrorResponse(res, err.message, 400);
       }
-      return sendErrorResponse(res, "Error creating the account", 400);
+      return sendErrorResponse(res, err.message, 400);
     }
   }
 

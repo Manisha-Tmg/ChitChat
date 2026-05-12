@@ -32,12 +32,12 @@ export const registerUserServices = async (
 
 export const loginUserServices = async (email: string, password: string) => {
   try {
-    const userExist = await userModels.findOne({ email });
-
+    const userExist = await userModels.findOne({ email }).select("+password");
+    console.log(userExist);
     if (!userExist) {
       throw new Error("USER_NOT_FOUND");
     }
-
+    console.log(userExist.password);
     const hashedPassword = await bcrypt.compare(password, userExist.password);
 
     if (!hashedPassword) {
