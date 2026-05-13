@@ -26,8 +26,8 @@ class messageController {
 
   static async getAllMessage(req: Request, res: Response) {
     try {
-      const messages = await getAllMessageServices();
-      console.log(messages)
+      const chatId = req.params._id;
+      const messages = await getAllMessageServices(chatId as string);
       return sendSuccessResponse(
         res,
         "Message fetched successfully",

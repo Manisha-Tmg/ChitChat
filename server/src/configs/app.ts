@@ -27,6 +27,6 @@ export class App {
     this.app.use("/api/users", authRouter);
     this.app.use("/api/users/protected", router);
     this.app.use("/api/chats", chatRouter);
-    this.app.use("/api/messages/", messageRouter);
+    this.app.use("/api/messages", messageRouter);
   }
 }
