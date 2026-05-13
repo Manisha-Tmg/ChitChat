@@ -1,6 +1,7 @@
 import { CreatedAt } from "sequelize-typescript";
 import chatModels from "../database/models/chat.models";
 import messageModels from "../database/models/message.models";
+import { after } from "node:test";
 
 export const createMessageServices = async (
   chatId: string,
@@ -17,7 +18,7 @@ export const createMessageServices = async (
           unreadMessageCount: 1,
         },
       },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     return newMessage;
