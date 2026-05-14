@@ -1,7 +1,39 @@
 import { Link } from "react-router-dom";
 import "../signup/Style.css";
+import { use, useState } from "react";
+import signUpUser from "../../apiCalls/Auth";
+import { toast } from "react-toastify";
 
 const Signup = () => {
+  interface User {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }
+
+  const [user, setUser] = useState<User>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
+
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+    let response = null as any;
+    try {
+      response = await signUpUser(user);
+      if (response.success) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="container">
       <div className="container-back-img"></div>
@@ -11,14 +43,38 @@ const Signup = () => {
           <h1>Create Account</h1>
         </div>
         <div className="form">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="column">
-              <input type="text" placeholder="First Name" />
-              <input type="text" placeholder="Last Name" />
+              <input
+                type="text"
+                placeholder="First Name"
+                value={user.firstName}
+                onChange={(e) =>
+                  setUser({ ...user, firstName: e.target.value })
+                }
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                value={user.lastName}
+                onChange={(e) => setUser({ ...user, lastName: e.target.value })}
+              />
             </div>
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button>Sign Up</button>
+            <input
+              type="email"
+              placeholder="Email"
+              value={user.email}
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={user.password}
+              onChange={(e) => setUser({ ...user, password: e.target.value })}
+            />
+            <button type="submit" onClick={handleSubmit}>
+              Sign Up
+            </button>
           </form>
         </div>
         <div className="card_terms">

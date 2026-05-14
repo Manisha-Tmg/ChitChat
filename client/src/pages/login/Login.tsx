@@ -1,8 +1,18 @@
 import { Link } from "react-router-dom";
 
 import "../signup/Style.css";
+import { useState } from "react";
 
 const Login = () => {
+  const [user, setUser] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleLogin = async (event: any) => {
+    event.preventDefault();
+    console.log(user);
+  };
   return (
     <div className="container">
       <div className="container-back-img"></div>
@@ -12,10 +22,19 @@ const Login = () => {
           <h1>Login Here</h1>
         </div>
         <div className="form">
-          <form>
-            <input type="email" placeholder="Email" />
-
-            <input type="password" placeholder="Password" />
+          <form onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder="Email"
+              value={user.email}
+              onChange={(e) => setUser({ ...user, email: e.target.value })}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={user.password}
+              onChange={(e) => setUser({ ...user, password: e.target.value })}
+            />
             <button>Login</button>
           </form>
         </div>
