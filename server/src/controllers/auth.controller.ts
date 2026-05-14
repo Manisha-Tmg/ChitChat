@@ -39,7 +39,7 @@ class AuthController {
         err.message === "USER_NOT_FOUND" ||
         err.message === "CREDENTIALS DIDN'T MATCH"
       ) {
-        return sendErrorResponse(res, err.message, 400);
+        return sendErrorResponse(res, "Incorrect Credentials", 400);
       }
       return sendErrorResponse(res, err.message, 400);
     }

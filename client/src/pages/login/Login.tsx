@@ -19,12 +19,17 @@ const Login = () => {
     let data = null as any;
     try {
       data = await LoginUser(user);
+      console.log(data?.data.token);
+      const token: string = data.data.token;
       console.log(data);
-      if (data.success) {
+      if (data.success === true) {
+        localStorage.setItem("Token", token);
+        toast.success(data.message);
+      } else {
+        toast.error("Error occured");
       }
-      toast.success(data.message);
     } catch (error: any) {
-      toast.error(data);
+      console.log("error");
     }
   };
   return (

@@ -1,7 +1,5 @@
-import { CreatedAt } from "sequelize-typescript";
 import chatModels from "../database/models/chat.models";
 import messageModels from "../database/models/message.models";
-import { after } from "node:test";
 
 export const createMessageServices = async (
   chatId: string,
@@ -22,8 +20,8 @@ export const createMessageServices = async (
     );
 
     return newMessage;
-  } catch (error) {
-    throw error;
+  } catch (error:any) {
+    throw new Error(error.message);
   }
 };
 
@@ -33,7 +31,7 @@ export const getAllMessageServices = async (chatId: string) => {
       .find({ chatOd: chatId })
       .sort({ createdAt: 1 });
     return messages;
-  } catch (error) {
-    throw error;
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };

@@ -60,7 +60,7 @@ export const loginUserServices = async (email: string, password: string) => {
       },
     };
   } catch (error: any) {
-    throw error.message;
+    throw new Error(error.message);
   }
 };
 
@@ -70,7 +70,7 @@ export const getAllUserServices = async (id: string) => {
     const users = await userModels.find({ _id: { $ne: id } });
     return users;
   } catch (error: any) {
-    throw error.message;
+    throw new Error(error.message);
   }
 };
 
@@ -78,7 +78,7 @@ export const userProfileServices = async (id: string) => {
   try {
     const data = await userModels.findOne({ id: id });
   } catch (error: any) {
-    throw error.message;
+    throw new Error(error.message);
   }
 };
 
@@ -87,6 +87,6 @@ export const readUserBYIdServices = async (id: string) => {
     const users = await userModels.findById(id);
     return users;
   } catch (error: any) {
-    throw error.message;
+    throw new Error(error.message);
   }
 };
