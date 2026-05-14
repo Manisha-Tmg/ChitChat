@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import "../signup/Style.css";
-import { use, useState } from "react";
-import signUpUser from "../../apiCalls/Auth";
 import { toast } from "react-toastify";
+import { signUpUser } from "../../apiCalls/Auth";
+import "../signup/Style.css";
 
 const Signup = () => {
   interface User {

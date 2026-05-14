@@ -1,12 +1,20 @@
 import { axiosInstance } from ".";
 
-const signUpUser = async (user: any) => {
+const API = "http://localhost:8000/api";
+export const signUpUser = async (user: any) => {
   try {
-    const response = await axiosInstance.post("/users/register", user);
+    const response = await axiosInstance.post(`${API}/users/register`, user);
     return response.data;
   } catch (error: any) {
-    return error;
+    return error.message;
   }
 };
 
-export default signUpUser;
+export const LoginUser = async (user: any) => {
+  try {
+    const response = await axiosInstance.post(`${API}/users/login`, user);
+    return response.data;
+  } catch (error: any) {
+    return error.message;
+  }
+};

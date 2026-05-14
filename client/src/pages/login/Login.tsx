@@ -1,17 +1,31 @@
 import { Link } from "react-router-dom";
-
 import "../signup/Style.css";
 import { useState } from "react";
+import { LoginUser } from "../../apiCalls/Auth";
+import { toast } from "react-toastify";
 
 const Login = () => {
-  const [user, setUser] = useState({
+  interface User {
+    email: string;
+    password: string;
+  }
+  const [user, setUser] = useState<User>({
     email: "",
     password: "",
   });
 
   const handleLogin = async (event: any) => {
     event.preventDefault();
-    console.log(user);
+    let data = null as any;
+    try {
+      data = await LoginUser(user);
+      console.log(data);
+      if (data.success) {
+      }
+      toast.success(data.message);
+    } catch (error: any) {
+      toast.error(data);
+    }
   };
   return (
     <div className="container">
