@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import { signUpUser } from "../../apiCalls/Auth";
 import "../signup/Style.css";
+import toast from "react-hot-toast";
 
 const Signup = () => {
   interface User {
@@ -25,12 +25,12 @@ const Signup = () => {
     try {
       response = await signUpUser(user);
       if (response.success) {
-        toast.success(response.message);
+        toast.error(response?.message || "Error creating user");
       } else {
-        toast.error(response.message);
+        toast.error(response?.message || "Error creating user");
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Error creating user");
     }
   };
 

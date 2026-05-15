@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, type NavigateFunction } from "react-router-dom";
 import "../signup/Style.css";
 import { useState } from "react";
 import { LoginUser } from "../../apiCalls/Auth";
-import { toast } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 
 const Login = () => {
   interface User {
@@ -13,25 +13,27 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const navigate: NavigateFunction = useNavigate();
 
   const handleLogin = async (event: any) => {
     event.preventDefault();
     let data = null as any;
     try {
       data = await LoginUser(user);
-      console.log(data?.data.token);
-      const token: string = data.data.token;
-      console.log(data);
-      if (data.success === true) {
+      const token: string = data?.data?.token;
+      if (data.success) {
         localStorage.setItem("Token", token);
-        toast.success(data.message);
+        navigate("/");
+
+        toast.success(data?.message);
       } else {
-        toast.error("Error occured");
+        toast.error(data?.message || "Login failed");
       }
     } catch (error: any) {
-      console.log("error");
+      toast.error(error?.response?.data?.message || "Login failed");
     }
   };
+
   return (
     <div className="container">
       <div className="container-back-img"></div>
