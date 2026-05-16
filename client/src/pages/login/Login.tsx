@@ -1,10 +1,13 @@
-import { Link, useNavigate, type NavigateFunction } from "react-router-dom";
-import "../signup/Style.css";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate, type NavigateFunction } from "react-router-dom";
 import { LoginUser } from "../../apiCalls/Auth";
-import toast, { Toaster } from "react-hot-toast";
+import { hideLoader, showLoader } from "../../redux/loaderSlice";
+import "../signup/Style.css";
 
 const Login = () => {
+  const dispatch = useDispatch();
   interface User {
     email: string;
     password: string;
@@ -19,17 +22,19 @@ const Login = () => {
     event.preventDefault();
     let data = null as any;
     try {
+      dispatch(showLoader());
       data = await LoginUser(user);
+      dispatch(hideLoader());
       const token: string = data?.data?.token;
       if (data.success) {
         localStorage.setItem("token", token);
         navigate("/");
-
         toast.success(data?.message);
       } else {
         toast.error(data?.message || "Login failed");
       }
     } catch (error: any) {
+      dispatch(hideLoader());
       toast.error(error?.response?.data?.message || "Login failed");
     }
   };

@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import { signUpUser } from "../../apiCalls/Auth";
 import "../signup/Style.css";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { hideLoader, showLoader } from "../../redux/loaderSlice";
 
 const Signup = () => {
+  const dispatch = useDispatch();
   interface User {
     firstName: string;
     lastName: string;
@@ -23,13 +26,16 @@ const Signup = () => {
     event.preventDefault();
     let response = null as any;
     try {
+      dispatch(showLoader());
       response = await signUpUser(user);
+      dispatch(hideLoader());
       if (response.success) {
         toast.success(response?.message || "Error creating user");
       } else {
         toast.error(response?.message || "Error creating user");
       }
     } catch (error: any) {
+      dispatch(hideLoader());
       toast.error(error?.response?.data?.message || "Error creating user");
     }
   };

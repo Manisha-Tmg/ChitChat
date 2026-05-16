@@ -1,31 +1,43 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
 import { getLoggedUser } from "../apiCalls/users";
-import toast from "react-hot-toast";
+import { hideLoader, showLoader } from "../redux/loaderSlice";
+import { setUser } from "../redux/userSlice";
 
 interface ProtectedRouteProps {
   children: ReactNode;
 }
-type User = {
-  firstName: string;
-  lastName: string;
-  email: string;
-};
+// type User = {
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+// };
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  const user = useSelector((state: any) => state.user.user);
   const navigate: NavigateFunction = useNavigate();
+
+  const dispatch = useDispatch();
 
   const getLoggedInUser = async () => {
     let response = null;
     try {
+      dispatch(showLoader());
       response = await getLoggedUser();
+      dispatch(hideLoader());
+
       if (response.success) {
-        setUser(response.data);
+        dispatch(setUser(response.data));
         toast.success("User loaded");
+      } else {
+        toast.error(response.data);
+        navigate("/login");
       }
     } catch (error) {
-      return error;
+      dispatch(hideLoader());
+      navigate("/login");
     }
   };
 
@@ -37,15 +49,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     }
   }, []);
 
-  return (
-    <>
-      <p>
-        Name: {user?.firstName} {user?.lastName}
-      </p>
-      <p>Email:{user?.email}</p>
-      {children}
-    </>
-  );
+  return <div>{children}</div>;
 };
 
 export default ProtectedRoute;

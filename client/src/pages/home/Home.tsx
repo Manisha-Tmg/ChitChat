@@ -1,5 +1,16 @@
+import "../css/Home.css";
+import Header from "./components/Header";
+import SideBar from "./SideBar";
+
 const Home = () => {
-  return <div>This is my home page</div>;
+  return (
+    <div className="home-page">
+      <Header />
+      <div className="main-content">
+        <SideBar />
+      </div>
+    </div>
+  );
 };
 
 export default Home;
