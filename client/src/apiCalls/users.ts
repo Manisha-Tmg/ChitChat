@@ -3,8 +3,8 @@ import { API } from "./Api";
 
 export const getLoggedUser = async () => {
   try {
-    const response = axiosInstance.get(`${API}/users/logged-in-user`);
-    return (await response).data;
+    const response = await axiosInstance.get(`${API}/users/logged-in-user`);
+    return response.data;
   } catch (error: any) {
     return error;
   }
