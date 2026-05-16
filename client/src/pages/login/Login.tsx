@@ -22,7 +22,7 @@ const Login = () => {
       data = await LoginUser(user);
       const token: string = data?.data?.token;
       if (data.success) {
-        localStorage.setItem("Token", token);
+        localStorage.setItem("token", token);
         navigate("/");
 
         toast.success(data?.message);

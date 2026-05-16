@@ -15,7 +15,7 @@ export const registerUserServices = async (
       Number(process.env.BCRYPT_SALT_ROUNDS),
     );
 
-    const user = await userModels.create({
+    await userModels.create({
       firstName,
       lastName,
       email,
@@ -53,7 +53,7 @@ export const loginUserServices = async (email: string, password: string) => {
     return {
       token,
       user: {
-        id: userExist.id,
+        id: userExist._id,
         firstName: userExist.firstName,
         lastName: userExist.lastName,
         email: userExist.email,
@@ -76,7 +76,10 @@ export const getAllUserServices = async (id: string) => {
 
 export const userProfileServices = async (id: string) => {
   try {
-    const data = await userModels.findOne({ id: id });
+    const user = await userModels.findOne({
+      _id: id,
+    });
+    return user;
   } catch (error: any) {
     throw new Error(error.message);
   }

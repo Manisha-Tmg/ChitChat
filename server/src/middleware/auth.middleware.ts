@@ -14,6 +14,7 @@ class Auth {
     next: NextFunction,
   ): Promise<void> {
     const token = req.headers.authorization?.split(" ")[1];
+    console.log(token);
     if (!token || token === undefined) {
       res.status(403).json({
         message: "token not found",
@@ -25,7 +26,7 @@ class Auth {
       token,
       process.env.JWT_SECRET as string,
       async (err, decoded: any) => {
-        console.log(decoded._id);
+        console.log("decoded",decoded._id);
         if (err) {
           res.status(403).json({
             message: "token not valid",

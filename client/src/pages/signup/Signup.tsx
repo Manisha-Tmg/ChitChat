@@ -25,7 +25,7 @@ const Signup = () => {
     try {
       response = await signUpUser(user);
       if (response.success) {
-        toast.error(response?.message || "Error creating user");
+        toast.success(response?.message || "Error creating user");
       } else {
         toast.error(response?.message || "Error creating user");
       }

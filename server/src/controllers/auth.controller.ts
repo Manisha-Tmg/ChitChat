@@ -23,7 +23,7 @@ class AuthController {
         password,
         profileImage,
       );
-      return sendSuccessResponse(res, "User creatied sucessfully", user, 200);
+      return sendSuccessResponse(res, "User created sucessfully", user, 200);
     } catch (err: any) {
       return sendErrorResponse(res, "Error creating the account", 400);
     }
@@ -68,11 +68,13 @@ class AuthController {
 
   static async userProfile(req: AuthRequest, res: Response) {
     try {
-      const id = req.user._id;
+      const id = req.user.id;
+      console.log("the id", id);
       const user = await userProfileServices(id);
+      console.log(user);
       return sendSuccessResponse(res, "User profile fetched", user, 200);
     } catch (err: any) {
-      return sendErrorResponse(res, "Error creating the account", 400);
+      return sendErrorResponse(res, "Error to fetch the data", 400);
     }
   }
 }
