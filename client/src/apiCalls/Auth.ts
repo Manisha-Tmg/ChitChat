@@ -1,6 +1,6 @@
 import { axiosInstance } from ".";
+import { API } from "./Api";
 
-const API = "http://localhost:8000/api";
 export const signUpUser = async (user: any) => {
   try {
     const response = await axiosInstance.post(`${API}/users/register`, user);
