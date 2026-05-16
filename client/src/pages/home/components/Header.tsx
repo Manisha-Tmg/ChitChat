@@ -5,8 +5,8 @@ const Header = () => {
   const user = useSelector((state: any) => state.user.user);
   console.log(user);
   function getFullName() {
-    const fName: string = user?.firstName.toLowerCase().charAt(0).toUpperCase();
-    const lName: string = user?.lastName.toLowerCase().charAt(0).toUpperCase();
+    const fName: string = user?.firstName;
+    const lName: string = user?.lastName;
     return fName + " " + lName;
   }
 
