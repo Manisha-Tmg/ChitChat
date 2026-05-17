@@ -3,16 +3,20 @@ import "../../css/Home.css";
 
 const Header = () => {
   const user = useSelector((state: any) => state.user.user);
-  console.log(user);
+
   function getFullName() {
-    const fName: string = user?.firstName;
-    const lName: string = user?.lastName;
+    const fName: string =
+      user?.firstName?.charAt(0).toUpperCase() +
+        user?.firstName?.slice(1).toLowerCase() || "";
+    const lName: string =
+      user?.lastName?.charAt(0).toUpperCase() +
+        user?.lastName?.slice(1).toLowerCase() || "";
     return fName + " " + lName;
   }
 
   function getInitial() {
-    const fName: string = user?.firstName.toUpperCase()[0];
-    const lName: string = user?.lastName.toUpperCase()[0];
+    const fName: string = user?.firstName?.toUpperCase()[0] || "";
+    const lName: string = user?.lastName?.toUpperCase()[0] || "";
     return fName + lName;
   }
   return (

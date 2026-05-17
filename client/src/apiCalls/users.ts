@@ -11,3 +11,14 @@ export const getLoggedUser = async () => {
     return error;
   }
 };
+
+export const getALlUser = async () => {
+  try {
+    const response = await axiosInstance.get(
+      `${API}/users/protected/get-all-users`,
+    );
+    return response.data;
+  } catch (error: any) {
+    return error;
+  }
+};
