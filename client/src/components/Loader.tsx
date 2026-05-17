@@ -1,4 +1,3 @@
-import "./css/Style.css";
 const Loader = () => {
   return (
     <div className="loader-overlay">

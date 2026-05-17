@@ -18,6 +18,7 @@ export const getALlUser = async () => {
       `${API}/users/protected/get-all-users`,
     );
     return response.data;
+    
   } catch (error: any) {
     return error;
   }

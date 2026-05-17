@@ -1,4 +1,3 @@
-import "../css/Home.css";
 import Header from "./components/Header";
 import SideBar from "./SideBar";
 

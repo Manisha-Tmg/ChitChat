@@ -1,5 +1,4 @@
 import { useSelector } from "react-redux";
-import "../../css/Home.css";
 
 const Header = () => {
   const user = useSelector((state: any) => state.user.user);
@@ -23,7 +22,7 @@ const Header = () => {
     <div className="app-header">
       <div className="app-logo">
         <i className="fa fa-comments" aria-hidden="true"></i>
-        Quick Chat
+        Chit Chat
       </div>
 
       <div className="app-user-profile">

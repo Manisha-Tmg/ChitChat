@@ -79,6 +79,7 @@ export const userProfileServices = async (id: string) => {
     const user = await userModels.findOne({
       _id: id,
     });
+    console.log(user)
     return user;
   } catch (error: any) {
     throw new Error(error.message);

@@ -9,9 +9,9 @@ const SideBar = () => {
     <div className="app-sidebar">
       <Search searchKey={searchKey} setSearchKey={setSearchKey}></Search>
       <UserList
-      // searchKey={searchKey}
-      // socket={socket}
-      // onlineUser={onlineUser}
+        searchKey={searchKey}
+        // socket={socket}
+        // onlineUser={onlineUser}
       ></UserList>
     </div>
   );
