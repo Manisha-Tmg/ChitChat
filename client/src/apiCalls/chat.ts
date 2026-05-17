@@ -10,7 +10,7 @@ export async function getAllChats() {
   }
 }
 
-export async function createChats(members: any) {
+export async function createChats(members: string[]) {
   try {
     const response = await axiosInstance.post(`${API}/chats/create-new-chat`, {
       members,

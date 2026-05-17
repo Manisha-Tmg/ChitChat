@@ -2,12 +2,14 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { createChats } from "../../../apiCalls/chat";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
-import { setAllChats } from "../../../redux/userSlice";
+import { setAllChats, setSelectedChat } from "../../../redux/userSlice";
 
 const UserList = ({ searchKey }: { searchKey: string }) => {
   const allUsers = useSelector((state: any) => state.user.allUsers);
   const allChats = useSelector((state: any) => state.user.allChats);
   const currentUser = useSelector((state: any) => state.user.user);
+  const selectedChat = useSelector((state: any) => state.user.selectedChat);
+
   const dispatch = useDispatch();
 
   const startNewChat = async (searchedUserId: any) => {
@@ -15,10 +17,13 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
       dispatch(showLoader());
       const response = await createChats([currentUser._id, searchedUserId]);
       dispatch(hideLoader());
+
       if (response.success) {
-        toast.success(response.data);
+        toast.success("Chat created successfully");
+
         const startChat = response.data;
         const updatedChat = [...allChats, startChat];
+
         dispatch(setAllChats(updatedChat));
       } else {
         toast.error(response.data);
@@ -28,21 +33,35 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
     }
   };
 
+  const openChat = (searchedUserId: any) => {
+    const chat = allChats.find(
+      (chat: any) =>
+        chat.members.includes(currentUser._id) &&
+        chat.members.includes(searchedUserId),
+    );
+
+    if (chat) {
+      dispatch(setSelectedChat(chat));
+    }
+  };
+
   return (
     <>
       {allUsers
         ?.filter((users: any) => {
           return (
+            searchKey &&
             (users.firstName.toLowerCase().includes(searchKey.toLowerCase()) ||
-              users.firstName
-                .toLowerCase()
-                .includes(searchKey.toLowerCase())) &&
-            searchKey
+              users.lastName.toLowerCase().includes(searchKey.toLowerCase()))
           );
         })
         .map((users: any) => {
           return (
-            <div className="user-search-filter" key={users._id}>
+            <div
+              className="user-search-filter"
+              key={users._id}
+              onClick={() => openChat(users._id)}
+            >
               <div className="filtered-user">
                 <div className="filter-user-display">
                   {users.profileImage ? (
@@ -57,22 +76,28 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                         users.lastName.charAt(0).toUpperCase()}
                     </div>
                   )}
+
                   <div className="filter-user-details">
                     <div className="user-display-name">
                       {users.firstName + " " + users.lastName}
                     </div>
                     <div className="user-display-email">{users.email}</div>
                   </div>
+
                   <div>
                     <div className="last-message-timestamp"></div>
                   </div>
+
                   {!allChats?.some((chat: any) =>
                     chat.members.includes(users._id),
                   ) && (
                     <div className="user-start-chat">
                       <button
                         className="user-start-chat-btn"
-                        onClick={() => startNewChat(currentUser._id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          startNewChat(users._id);
+                        }}
                       >
                         Start Chat
                       </button>

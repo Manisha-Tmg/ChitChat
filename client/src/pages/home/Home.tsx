@@ -1,3 +1,4 @@
+import ChatArea from "./components/ChatArea";
 import Header from "./components/Header";
 import SideBar from "./SideBar";
 
@@ -7,6 +8,7 @@ const Home = () => {
       <Header />
       <div className="main-content">
         <SideBar />
+        <ChatArea />
       </div>
     </div>
   );
