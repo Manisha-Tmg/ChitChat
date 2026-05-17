@@ -11,9 +11,8 @@ body {
   overflow-y: hidden;
 }
 
-/*******************************************************
-*************CSS STYLES FOR LOGIN & SIGNUP**************
-********************************************************/
+/*LOGIN & SIGNUP*/
+
 .container-back-img {
   background-image: url("./../public/images/quick-chat-app-background.jpg");
   background-repeat: no-repeat;
@@ -110,10 +109,7 @@ body {
   margin-left: 5px;
 }
 
-/********************************************************************
-***************************CSS FOR LOADIER**************************
-********************************************************************/
-
+/* LOADIER */
 .loader-overlay {
   position: fixed; /* Sit on top of the page content */
   width: 100%; /* Full width (cover the whole page) */
@@ -165,9 +161,7 @@ body {
   }
 }
 
-/*******************************************************
-********CSS FOR HOME PAGE*******************************
-********************************************************/
+/*HOME PAGE*/
 .home-page {
   background-color: #fdedec;
   display: flex;
@@ -183,9 +177,7 @@ body {
   flex: 1;
 }
 
-/*******************************************************
-********CSS FOR HEADER COMPONENT************************
-********************************************************/
+/*HEADER COMPONENT*/
 .app-header {
   display: flex;
   flex-wrap: wrap;
@@ -233,17 +225,13 @@ i {
   cursor: pointer;
 }
 
-/*******************************************************
-********CSS FOR SIDEBAR COMPONENT************************
-********************************************************/
+/*SIDEBAR COMPONENT*/
 .app-sidebar {
   width: 30%;
   padding: 0px 20px;
 }
 
-/*******************************************************
-********CSS FOR SEARCH COMPONENT************************
-********************************************************/
+/*SEARCH COMPONENT*/
 .user-search-area {
   margin-bottom: 20px;
   position: relative;
@@ -266,39 +254,31 @@ i {
   color: #e74c3c;
 }
 
-/*******************************************************
-********CSS FOR USER LIST COMPONENT*********************
-********************************************************/
+/*USER LIST COMPONENT*/
 .filtered-user {
-  border-bottom: #ccc 1px solid;
-  padding: 10px 10px;
-  color: #28282b;
+  border-bottom: 1px solid #ddd;
+  padding: 12px;
+  background: white;
   cursor: pointer;
-  background-color: white;
+  transition: all 0.3s ease;
 }
+
+.filtered-user:hover {
+  background-color: #f7f7f7;
+}
+
 .selected-user {
-  border-bottom: #ccc 1px solid;
-  padding: 10px 10px;
+  border-bottom: 1px solid #ddd;
+  padding: 12px;
   color: white;
-  cursor: pointer;
   background-color: #e74c3c;
 }
 
 .filter-user-display {
   display: flex;
-  flex-wrap: wrap;
-}
-.filter-user-details {
-  width: 60%;
-}
-.user-display-name {
-  padding: 1px 20px;
-  font-size: 16px;
-  font-weight: bold;
-}
-.user-display-email {
-  padding: 1px 20px;
-  font-size: 12px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
 }
 
 .user-default-avatar,
@@ -306,36 +286,73 @@ i {
 .user-selected-avatar {
   width: 50px;
   height: 50px;
+  min-width: 50px;
   border-radius: 50%;
-  font-size: 22px;
+  font-size: 18px;
   font-weight: bold;
   text-align: center;
-  vertical-align: middle;
   line-height: 50px;
 }
+
 .user-default-avatar {
   background-color: #e74c3c;
   color: white;
 }
+
 .user-selected-avatar {
   background-color: white;
   color: #e74c3c;
 }
 
-.user-start-chat {
-  padding: 10px 0px;
-}
-.user-start-chat-btn {
-  padding: 10px 5px;
-  border: none;
-  border-radius: 3px;
-  background-color: #e74c3c;
-  color: white;
+.filter-user-details {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
-/*******************************************************
-*************CSS STYLES FOR CHAT AREA**************
-********************************************************/
+.user-display-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #28282b;
+}
+
+.user-display-email {
+  font-size: 13px;
+  color: gray;
+  margin-top: 4px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.last-message-timestamp {
+  font-size: 11px;
+  color: gray;
+}
+
+.user-start-chat {
+  flex-shrink: 0;
+}
+
+.user-start-chat-btn {
+  width: 110px;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #e74c3c;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.user-start-chat-btn:hover {
+  opacity: 0.9;
+  transform: scale(1.03);
+}
+/*CHAT AREA*/
 
 .app-chat-area {
   background-color: white;
@@ -347,9 +364,7 @@ i {
   height: 85vh;
 }
 
-/*******************************************************
-*************CSS STYLES FOR CHAT AREA HEADER************
-********************************************************/
+/*CHAT AREA HEADER*/
 .app-chat-area-header {
   padding: 10px 30px;
   margin-bottom: 20px;
@@ -359,9 +374,7 @@ i {
   color: #e74c3c;
 }
 
-/*******************************************************
-********CSS STYLES FOR CHAT AREA & CHAT INPUT***********
-********************************************************/
+/*CHAT AREA & CHAT INPUT*/
 .main-chat-area {
   flex: 1;
   overflow-y: scroll;
@@ -416,9 +429,7 @@ i {
   margin-top: 5px;
 }
 
-/*****************************************************
-***********CUSTOM SCROLLBAR FOR CHATAREA**************
-******************************************************/
+/*CUSTOM SCROLLBAR FOR CHATAREA*/
 .main-chat-area::-webkit-scrollbar {
   width: 5px;
 }
@@ -440,9 +451,7 @@ i {
   background: #e74c3c;
 }
 
-/*******************************************************
-***************CSS FOR CHAT MESSAGES********************
-********************************************************/
+/*CHAT MESSAGES*/
 .message-container {
   display: flex;
 }
@@ -476,9 +485,7 @@ i {
   font-size: 13px;
 }
 
-/*****************************************************
-************MEDIA QUERY FOR USER LIST*****************
-******************************************************/
+/*MEDIA QUERY FOR USER LIST*/
 
 @media only screen and (max-width: 1000px) {
   .filter-user-details,
@@ -515,9 +522,7 @@ i {
   color: grey;
 }
 
-/*****************************************************
-*************CSS STYLES FOR PROFILE PAGE**************
-******************************************************/
+/*PROFILE PAGE*/
 
 .profile-page-container {
   display: flex;

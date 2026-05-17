@@ -1,38 +1,88 @@
-import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { createChats } from "../../../apiCalls/chat";
+import { hideLoader, showLoader } from "../../../redux/loaderSlice";
+import { setAllChats } from "../../../redux/userSlice";
 
 const UserList = ({ searchKey }: { searchKey: string }) => {
   const allUsers = useSelector((state: any) => state.user.allUsers);
+  const allChats = useSelector((state: any) => state.user.allChats);
+  const currentUser = useSelector((state: any) => state.user.user);
+  const dispatch = useDispatch();
+
+  const startNewChat = async (searchedUserId: any) => {
+    try {
+      dispatch(showLoader());
+      const response = await createChats([currentUser._id, searchedUserId]);
+      dispatch(hideLoader());
+      if (response.success) {
+        toast.success(response.data);
+        const startChat = response.data;
+        const updatedChat = [...allChats, startChat];
+        dispatch(setAllChats(updatedChat));
+      } else {
+        toast.error(response.data);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
-      {allUsers?.map((users: any) => {
-        return (
-          <div className="user-search-filter">
-            <div className="filtered-user">
-              <div className="filter-user-display">
-                {/* <img src={"img"} alt="Profile Pic" className="user-profile-image" /> */}
-                <div className="user-default-avatar">
-                  {users.firstName.charAt(0).toUpperCase() +
-                    users.lastName.charAt(0).toUpperCase()}
-                </div>
-                <div className="filter-user-details">
-                  <div className="user-display-name">
-                    {users.firstName + users.lastName}
+      {allUsers
+        ?.filter((users: any) => {
+          return (
+            (users.firstName.toLowerCase().includes(searchKey.toLowerCase()) ||
+              users.firstName
+                .toLowerCase()
+                .includes(searchKey.toLowerCase())) &&
+            searchKey
+          );
+        })
+        .map((users: any) => {
+          return (
+            <div className="user-search-filter" key={users._id}>
+              <div className="filtered-user">
+                <div className="filter-user-display">
+                  {users.profileImage ? (
+                    <img
+                      src={users.profileImage}
+                      alt="Profile Pic"
+                      className="user-profile-image"
+                    />
+                  ) : (
+                    <div className="user-default-avatar">
+                      {users.firstName.charAt(0).toUpperCase() +
+                        users.lastName.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <div className="filter-user-details">
+                    <div className="user-display-name">
+                      {users.firstName + " " + users.lastName}
+                    </div>
+                    <div className="user-display-email">{users.email}</div>
                   </div>
-                  <div className="user-display-email">{users.email}</div>
-                </div>
-
-                <div>
-                  <div className="last-message-timestamp"></div>
-                </div>
-
-                <div className="user-start-chat">
-                  <button className="user-start-chat-btn">Start Chat</button>
+                  <div>
+                    <div className="last-message-timestamp"></div>
+                  </div>
+                  {!allChats?.some((chat: any) =>
+                    chat.members.includes(users._id),
+                  ) && (
+                    <div className="user-start-chat">
+                      <button
+                        className="user-start-chat-btn"
+                        onClick={() => startNewChat(currentUser._id)}
+                      >
+                        Start Chat
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
     </>
   );
 };
