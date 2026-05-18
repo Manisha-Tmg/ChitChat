@@ -25,6 +25,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
         const updatedChat = [...allChats, startChat];
 
         dispatch(setAllChats(updatedChat));
+        dispatch(setSelectedChat(startChat));
       } else {
         toast.error(response.data);
       }
@@ -94,8 +95,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                     <div className="user-start-chat">
                       <button
                         className="user-start-chat-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
+                        onClick={() => {
                           startNewChat(users._id);
                         }}
                       >

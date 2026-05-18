@@ -11,9 +11,12 @@ export const createChatServices = async (members: any) => {
 
 export const getAllChatServices = async (id: string) => {
   try {
-    const chat = await chatModels.find({ members: { $in: [id]} });
+    const chat = await chatModels
+      .find({ members: { $in: [id] } })
+      .populate("members", "-createdAt -updatedAt")
+      .select("-createdAt -updatedAt");
     return chat;
-  } catch (error:any) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 };
