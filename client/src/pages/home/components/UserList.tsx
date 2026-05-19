@@ -8,7 +8,8 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
   const allUsers = useSelector((state: any) => state.user.allUsers);
   const allChats = useSelector((state: any) => state.user.allChats);
   const currentUser = useSelector((state: any) => state.user.user);
-  const selectedChat = useSelector((state: any) => state.user.selectedChat);
+  const selectedChats = useSelector((state: any) => state.user.selectedChat);
+  console.log(selectedChats);
 
   const dispatch = useDispatch();
 
@@ -46,6 +47,9 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
     }
   };
 
+  const isSelectedChat = (user: any) =>
+    selectedChats?.members?.map((m: any) => m._id).includes(user._id) || false;
+
   return (
     <>
       {allUsers
@@ -70,26 +74,50 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
               key={users._id}
               onClick={() => openChat(users._id)}
             >
-              <div className="filtered-user">
+              <div
+                className={
+                  isSelectedChat(users) ? "selected-user" : "filtered-user"
+                }
+              >
                 <div className="filter-user-display">
                   {users.profileImage ? (
                     <img
                       src={users.profileImage}
                       alt="Profile Pic"
-                      className="user-profile-image"
+                      className="user-profile-avatar"
                     />
                   ) : (
-                    <div className="user-default-avatar">
+                    <div
+                      className={
+                        isSelectedChat(users)
+                          ? "user-selected-avatar"
+                          : "user-default-avatar"
+                      }
+                    >
                       {users.firstName.charAt(0).toUpperCase() +
                         users.lastName.charAt(0).toUpperCase()}
                     </div>
                   )}
 
                   <div className="filter-user-details">
-                    <div className="user-display-name">
+                    <div
+                      className={
+                        isSelectedChat(users)
+                          ? "user-selected-name"
+                          : "user-display-name"
+                      }
+                    >
                       {users.firstName + " " + users.lastName}
                     </div>
-                    <div className="user-display-email">{users.email}</div>
+                    <div
+                      className={
+                        isSelectedChat(users)
+                          ? "user-selected-email"
+                          : "user-display-email"
+                      }
+                    >
+                      {users.email}
+                    </div>
                   </div>
 
                   <div>

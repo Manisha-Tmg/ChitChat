@@ -262,7 +262,26 @@ i {
   cursor: pointer;
   transition: all 0.3s ease;
 }
+.selected-user {
+  border-bottom: #ccc 1px solid;
+  padding: 10px 10px;
+  color: white;
+  cursor: pointer;
+  background-color: #e74c3c;
+}
 
+.selected-user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: white;
+  color: #e74c3c;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 50px;
+}
 .filtered-user:hover {
   background-color: #f7f7f7;
 }
@@ -315,6 +334,11 @@ i {
   font-weight: 600;
   color: #28282b;
 }
+.user-selected-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
 
 .user-display-email {
   font-size: 13px;
@@ -326,6 +350,15 @@ i {
   text-overflow: ellipsis;
 }
 
+.user-selected-email {
+  font-size: 13px;
+  color: rgb(225, 220, 220);
+  margin-top: 4px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .last-message-timestamp {
   font-size: 11px;
   color: gray;
@@ -352,6 +385,7 @@ i {
   opacity: 0.9;
   transform: scale(1.03);
 }
+
 /*CHAT AREA*/
 
 .app-chat-area {
