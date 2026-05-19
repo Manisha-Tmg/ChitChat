@@ -69,9 +69,7 @@ class AuthController {
   static async userProfile(req: AuthRequest, res: Response) {
     try {
       const id = req.user.id;
-      console.log("the id", id);
       const user = await userProfileServices(id);
-      console.log(user);
       return sendSuccessResponse(res, "User profile fetched", user, 200);
     } catch (err: any) {
       return sendErrorResponse(res, "Error to fetch the data", 400);

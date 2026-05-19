@@ -11,7 +11,7 @@ messageRouter.post(
 );
 
 messageRouter.get(
-  "/get-all-messages/:ChatId",
+  "/get-all-messages/:chatId",
   auth.isAuthenticated,
   messageController.getAllMessage,
 );

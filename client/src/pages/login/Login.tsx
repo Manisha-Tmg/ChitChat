@@ -26,7 +26,6 @@ const Login = () => {
       data = await LoginUser(user);
       dispatch(hideLoader());
       const token: string = data?.data?.token;
-      console.log(token);
       if (data.success) {
         localStorage.setItem("token", token);
         navigate("/");

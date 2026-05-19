@@ -83,7 +83,6 @@ export const userProfileServices = async (id: string) => {
         _id: id,
       })
       .select("-createdAt -updatedAt");
-    console.log(user);
     return user;
   } catch (error: any) {
     throw new Error(error.message);

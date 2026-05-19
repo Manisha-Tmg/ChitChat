@@ -1,8 +1,8 @@
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { createMessage } from "../../../apiCalls/message";
+import { createMessage, getAllMessages } from "../../../apiCalls/message";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const ChatArea = () => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
@@ -11,23 +11,45 @@ const ChatArea = () => {
     (u: any) => u._id !== user._id,
   );
 
-  const [message, setMessage] = useState();
+  const [message, setMessage] = useState<string>("");
+  const [allMessages, setAllMessages] = useState<string[]>([]);
 
   const dispatch = useDispatch();
   const sendMessage = async () => {
     try {
       const msg: any = {
-        chat: selectedChats._id,
-        sender: user._id,
+        chatId: selectedChats._id,
         text: message,
+        sender: user._id,
       };
       dispatch(showLoader());
-      const res = await createMessage(msg);
+      await createMessage(msg);
+      setMessage("");
       dispatch(hideLoader());
     } catch (error: any) {
+      dispatch(hideLoader());
       toast.error(error.message);
     }
   };
+
+  const getMessages = async () => {
+    try {
+      dispatch(showLoader());
+      const res = await getAllMessages(selectedChats._id);
+      if (res.success) {
+        setAllMessages(res.data);
+      }
+      dispatch(hideLoader());
+    } catch (error: any) {
+      dispatch(hideLoader());
+
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getMessages();
+  }, [selectedChats]);
   return (
     <>
       {selectedChats && (
@@ -35,19 +57,23 @@ const ChatArea = () => {
           <div className="app-chat-area-header">
             {selectedUser.firstName + " " + selectedUser.lastName}
           </div>
-          <div>CHAT AREA</div>
+          <div className="main-chat-area">CHAT AREA</div>
           <div className="send-message-div">
             <input
               type="text"
               className="send-message-input"
               placeholder="Type a message"
+              value={message}
+              onChange={(e) => {
+                setMessage(e.target.value);
+              }}
             />
-            <i
+            <button
               className="fa fa-paper-plane send-message-btn"
               aria-hidden="true"
-            ></i>
+              onClick={sendMessage}
+            ></button>
           </div>
-          <div>SEND MESSAGE</div>
         </div>
       )}
     </>

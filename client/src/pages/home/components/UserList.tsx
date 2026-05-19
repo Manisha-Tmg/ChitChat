@@ -9,7 +9,6 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
   const allChats = useSelector((state: any) => state.user.allChats);
   const currentUser = useSelector((state: any) => state.user.user);
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
-  console.log(selectedChats);
 
   const dispatch = useDispatch();
 
@@ -21,7 +20,6 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
 
       if (response.success) {
         toast.success("Chat created successfully");
-
         const startChat = response.data;
         const updatedChat = [...allChats, startChat];
 

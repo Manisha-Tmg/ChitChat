@@ -20,7 +20,7 @@ export const createMessageServices = async (
     );
 
     return newMessage;
-  } catch (error:any) {
+  } catch (error: any) {
     throw new Error(error.message);
   }
 };
@@ -28,8 +28,9 @@ export const createMessageServices = async (
 export const getAllMessageServices = async (chatId: string) => {
   try {
     const messages = await messageModels
-      .find({ chatOd: chatId })
+      .find({ chatId: chatId })
       .sort({ createdAt: 1 });
+    console.log(chatId);
     return messages;
   } catch (error: any) {
     throw new Error(error.message);
