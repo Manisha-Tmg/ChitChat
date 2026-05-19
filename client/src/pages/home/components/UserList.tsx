@@ -37,8 +37,8 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
   const openChat = (searchedUserId: any) => {
     const chat = allChats.find(
       (chat: any) =>
-        chat.members.includes(currentUser._id) &&
-        chat.members.includes(searchedUserId),
+        chat.members.map((m: any) => m._id).includes(currentUser._id) &&
+        chat.members.map((m: any) => m._id).includes(searchedUserId),
     );
 
     if (chat) {
@@ -51,9 +51,16 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
       {allUsers
         ?.filter((users: any) => {
           return (
-            searchKey &&
-            (users.firstName.toLowerCase().includes(searchKey.toLowerCase()) ||
-              users.lastName.toLowerCase().includes(searchKey.toLowerCase()))
+            (searchKey &&
+              (users.firstName
+                .toLowerCase()
+                .includes(searchKey.toLowerCase()) ||
+                users.lastName
+                  .toLowerCase()
+                  .includes(searchKey.toLowerCase()))) ||
+            allChats.some((chat: any) =>
+              chat.members.map((m: any) => m._id).includes(users._id),
+            )
           );
         })
         .map((users: any) => {
@@ -90,7 +97,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                   </div>
 
                   {!allChats?.some((chat: any) =>
-                    chat.members.includes(users._id),
+                    chat.members.map((m: any) => m._id).includes(users._id),
                   ) && (
                     <div className="user-start-chat">
                       <button
