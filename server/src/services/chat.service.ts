@@ -13,8 +13,9 @@ export const getAllChatServices = async (id: string) => {
   try {
     const chat = await chatModels
       .find({ members: { $in: [id] } })
-      .populate("members", "-createdAt -updatedAt")
-      .select("-createdAt -updatedAt");
+      .populate("members")
+      .populate("lastMessage")
+      .sort({ updatedAt: -1 });
     return chat;
   } catch (error: any) {
     throw new Error(error.message);

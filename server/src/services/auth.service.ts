@@ -67,9 +67,8 @@ export const loginUserServices = async (email: string, password: string) => {
 // display users except the one logged-In
 export const getAllUserServices = async (id: string) => {
   try {
-    const users = await userModels
-      .find({ _id: { $ne: id } })
-      .select("-createdAt -updatedAt");
+    const users = await userModels.find({ _id: { $ne: id } });
+
     return users;
   } catch (error: any) {
     throw new Error(error.message);
@@ -78,11 +77,10 @@ export const getAllUserServices = async (id: string) => {
 
 export const userProfileServices = async (id: string) => {
   try {
-    const user = await userModels
-      .findOne({
-        _id: id,
-      })
-      .select("-createdAt -updatedAt");
+    const user = await userModels.findOne({
+      _id: id,
+    });
+
     return user;
   } catch (error: any) {
     throw new Error(error.message);
@@ -91,7 +89,7 @@ export const userProfileServices = async (id: string) => {
 
 export const readUserBYIdServices = async (id: string) => {
   try {
-    const users = await userModels.findById(id).select("-createdAt -updatedAt");
+    const users = await userModels.findById(id);
     return users;
   } catch (error: any) {
     throw new Error(error.message);

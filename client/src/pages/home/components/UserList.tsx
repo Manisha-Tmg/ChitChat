@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createChats } from "../../../apiCalls/chat";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import { setAllChats, setSelectedChat } from "../../../redux/userSlice";
+import moment from "moment";
 
 const UserList = ({ searchKey }: { searchKey: string }) => {
   const allUsers = useSelector((state: any) => state.user.allUsers);
@@ -44,6 +45,49 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
       dispatch(setSelectedChat(chat));
     }
   };
+
+  const getLastMsg = (userId: any) => {
+    const chat = allChats.find((chat: any) =>
+      chat.members.map((m: any) => m._id).includes(userId),
+    );
+    if (!chat || !chat?.lastMessage) {
+      return "";
+    } else {
+      const msgPrefix =
+        chat?.lastMessage?.sender === currentUser._id ? "You: " : "";
+
+      return msgPrefix + " " + chat.lastMessage?.text.substring(0, 25);
+    }
+  };
+
+  const getLastMessageTimesStamp = (userId: any) => {
+    const chat = allChats.find((chat: any) =>
+      chat.members.map((m: any) => m._id).includes(userId),
+    );
+
+    if (!chat || !chat.lastMessage) return "";
+
+    const messageDate = moment(chat.lastMessage.createdAt);
+
+    if (messageDate.isSame(moment(), "day")) {
+      return messageDate.format("hh:mm A");
+    }
+
+    if (messageDate.isSame(moment().subtract(1, "day"), "day")) {
+      return "Yesterday";
+    }
+
+    return messageDate.format("DD/MM/YYYY");
+  };
+
+  function formatName(user: any) {
+    let fName: string =
+      user.firstName.at(0).toUpperCase() +
+      user.firstName.slice(1)?.toLowerCase();
+    let lName: string =
+      user.lastName.at(0).toUpperCase() + user.lastName?.slice(1).toLowerCase();
+    return fName + " " + lName;
+  }
 
   const isSelectedChat = (user: any) =>
     selectedChats?.members?.map((m: any) => m._id).includes(user._id) || false;
@@ -105,7 +149,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                           : "user-display-name"
                       }
                     >
-                      {users.firstName + " " + users.lastName}
+                      {formatName(users)}
                     </div>
                     <div
                       className={
@@ -114,12 +158,14 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                           : "user-display-email"
                       }
                     >
-                      {users.email}
+                      {getLastMsg(users._id) || users.email}
                     </div>
                   </div>
 
                   <div>
-                    <div className="last-message-timestamp"></div>
+                    <div className="last-message-timestamp">
+                      {getLastMessageTimesStamp(users._id)}
+                    </div>
                   </div>
 
                   {!allChats?.some((chat: any) =>
@@ -128,7 +174,8 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                     <div className="user-start-chat">
                       <button
                         className="user-start-chat-btn"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           startNewChat(users._id);
                         }}
                       >
