@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  clearReadChatServices,
   createChatServices,
   getAllChatServices,
 } from "../services/chat.service";
@@ -8,6 +9,7 @@ import {
   sendSuccessResponse,
 } from "../utils/responseHelper";
 import { AuthRequest } from "../middleware/auth.middleware";
+import { channel } from "diagnostics_channel";
 
 class chatController {
   static async createChat(req: Request, res: Response) {
@@ -25,6 +27,19 @@ class chatController {
       const id = req.user.id as string;
 
       const chat = await getAllChatServices(id);
+
+      return sendSuccessResponse(res, "Chat fetched sucessfully", chat, 201);
+    } catch (err: any) {
+      return sendErrorResponse(res, err.message, 400);
+    }
+  }
+
+  static async clearReadChat(req: AuthRequest, res: Response) {
+    try {
+      const id = req.body?._id;
+      console.log(id);
+
+      const chat = await clearReadChatServices(id);
 
       return sendSuccessResponse(res, "Chat fetched sucessfully", chat, 201);
     } catch (err: any) {

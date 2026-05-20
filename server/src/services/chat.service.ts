@@ -1,4 +1,5 @@
 import chatModels from "../database/models/chat.models";
+import messageModels from "../database/models/message.models";
 
 export const createChatServices = async (members: any) => {
   try {
@@ -17,6 +18,35 @@ export const getAllChatServices = async (id: string) => {
       .populate("lastMessage")
       .sort({ updatedAt: -1 });
     return chat;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const clearReadChatServices = async (id: string) => {
+  try {
+    const chat = await chatModels.findById(id);
+    if (!chat) {
+      throw Error("Chat not found");
+    }
+
+    const chatUpdate = chatModels
+      .findByIdAndUpdate(
+        id,
+        {
+          unreadMessageCount: 0,
+        },
+        { returnDocument: "after" },
+      )
+      .populate("members")
+      .populate("lastMessage");
+    await messageModels.updateMany({
+      id: id,
+      read: false,
+    },{
+      read:true
+    });
+    return chatUpdate;
   } catch (error: any) {
     throw new Error(error.message);
   }

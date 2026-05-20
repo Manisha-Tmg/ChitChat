@@ -20,3 +20,16 @@ export async function createChats(members: string[]) {
     return error;
   }
 }
+export async function clearUnreadMessageCount(id: string) {
+  try {
+    const response = await axiosInstance.post(
+      `${API}/chats/clear-unread-message`,
+      {
+        id,
+      },
+    );
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}

@@ -4,10 +4,12 @@ import { createMessage, getAllMessages } from "../../../apiCalls/message";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { clearUnreadMessageCount } from "../../../apiCalls/chat";
 
 const ChatArea = () => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
   const user = useSelector((state: any) => state.user.user);
+  const allChat = useSelector((state: any) => state.user.allChats);
   const selectedUser = selectedChats?.members.find(
     (u: any) => u._id !== user._id,
   );
@@ -47,9 +49,29 @@ const ChatArea = () => {
       toast.error(error.message);
     }
   };
+  const clearUnreadMessage = async () => {
+    try {
+      dispatch(showLoader());
+      const res = await clearUnreadMessageCount(selectedChats._id);
+      if (res.success) {
+        allChat.map((chat: any) => {
+          if (chat._id === selectedChats._id) {
+            return res.data;
+          }
+          return chat;
+        });
+      }
+      dispatch(hideLoader());
+    } catch (error: any) {
+      dispatch(hideLoader());
+
+      toast.error(error.message);
+    }
+  };
 
   useEffect(() => {
     getMessages();
+    clearUnreadMessage();
   }, [selectedChats]);
 
   const formatTime = (timeStamp: string) => {

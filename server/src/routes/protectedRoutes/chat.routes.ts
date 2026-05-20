@@ -15,4 +15,10 @@ chatRouter.get(
   chatController.getAllChats,
 );
 
+chatRouter.post(
+  "/clear-unread-message",
+  auth.isAuthenticated,
+  chatController.clearReadChat,
+);
+
 export default chatRouter;
