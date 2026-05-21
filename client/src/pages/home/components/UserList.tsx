@@ -35,7 +35,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
   };
 
   const openChat = (searchedUserId: any) => {
-    const chat = allChat .find(
+    const chat = allChat.find(
       (chat: any) =>
         chat.members.map((m: any) => m._id).includes(currentUser._id) &&
         chat.members.map((m: any) => m._id).includes(searchedUserId),
@@ -96,8 +96,14 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
     const chat = allChat.find((chat: any) =>
       chat.members.map((m: any) => m._id).includes(userId),
     );
-    if (chat && chat.unreadMessageCount) {
-      return chat.unreadMessageCount;
+    if (
+      chat &&
+      chat?.unreadMessageCount &&
+      chat?.lastMessage?.sender !== currentUser._id
+    ) {
+      return (
+        <div className="unread-message-counter">{chat.unreadMessageCount}</div>
+      );
     } else {
       return "";
     }
@@ -173,7 +179,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                   </div>
 
                   <div>
-                    <div>{getUnreadMessageCount(users._id)}</div>
+                    {getUnreadMessageCount(users._id)}
                     <div className="last-message-timestamp">
                       {getLastMessageTimesStamp(users._id)}
                     </div>

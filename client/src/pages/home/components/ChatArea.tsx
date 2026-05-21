@@ -71,7 +71,9 @@ const ChatArea = () => {
 
   useEffect(() => {
     getMessages();
-    clearUnreadMessage();
+    if (selectedChats?.lastMessage?.sender !== user._id) {
+      clearUnreadMessage();
+    }
   }, [selectedChats]);
 
   const formatTime = (timeStamp: string) => {
