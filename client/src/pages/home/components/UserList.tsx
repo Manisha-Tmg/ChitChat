@@ -7,7 +7,7 @@ import moment from "moment";
 
 const UserList = ({ searchKey }: { searchKey: string }) => {
   const allUsers = useSelector((state: any) => state.user.allUsers);
-  const allChats = useSelector((state: any) => state.user.allChats);
+  const allChat = useSelector((state: any) => state.user.allChats);
   const currentUser = useSelector((state: any) => state.user.user);
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
 
@@ -22,7 +22,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
       if (response.success) {
         toast.success("Chat created successfully");
         const startChat = response.data;
-        const updatedChat = [...allChats, startChat];
+        const updatedChat = [...allChat, startChat];
 
         dispatch(setAllChats(updatedChat));
         dispatch(setSelectedChat(startChat));
@@ -35,7 +35,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
   };
 
   const openChat = (searchedUserId: any) => {
-    const chat = allChats.find(
+    const chat = allChat .find(
       (chat: any) =>
         chat.members.map((m: any) => m._id).includes(currentUser._id) &&
         chat.members.map((m: any) => m._id).includes(searchedUserId),
@@ -47,7 +47,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
   };
 
   const getLastMsg = (userId: any) => {
-    const chat = allChats.find((chat: any) =>
+    const chat = allChat.find((chat: any) =>
       chat.members.map((m: any) => m._id).includes(userId),
     );
     if (!chat || !chat?.lastMessage) {
@@ -61,7 +61,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
   };
 
   const getLastMessageTimesStamp = (userId: any) => {
-    const chat = allChats.find((chat: any) =>
+    const chat = allChat.find((chat: any) =>
       chat.members.map((m: any) => m._id).includes(userId),
     );
 
@@ -82,8 +82,8 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
 
   function formatName(user: any) {
     let fName: string =
-      user.firstName.at(0).toUpperCase() +
-      user.firstName.slice(1)?.toLowerCase();
+      user?.firstName?.at(0).toUpperCase() +
+      user?.firstName?.slice(1)?.toLowerCase();
     let lName: string =
       user.lastName.at(0).toUpperCase() + user.lastName?.slice(1).toLowerCase();
     return fName + " " + lName;
@@ -92,6 +92,16 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
   const isSelectedChat = (user: any) =>
     selectedChats?.members?.map((m: any) => m._id).includes(user._id) || false;
 
+  const getUnreadMessageCount = (userId: any) => {
+    const chat = allChat.find((chat: any) =>
+      chat.members.map((m: any) => m._id).includes(userId),
+    );
+    if (chat && chat.unreadMessageCount) {
+      return chat.unreadMessageCount;
+    } else {
+      return "";
+    }
+  };
   return (
     <>
       {allUsers
@@ -104,7 +114,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                 users.lastName
                   .toLowerCase()
                   .includes(searchKey.toLowerCase()))) ||
-            allChats.some((chat: any) =>
+            allChat.some((chat: any) =>
               chat.members.map((m: any) => m._id).includes(users._id),
             )
           );
@@ -126,7 +136,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                     <img
                       src={users.profileImage}
                       alt="Profile Pic"
-                      className="user-profile-avatar"
+                      className="user-default-avatar"
                     />
                   ) : (
                     <div
@@ -136,8 +146,8 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                           : "user-default-avatar"
                       }
                     >
-                      {users.firstName.charAt(0).toUpperCase() +
-                        users.lastName.charAt(0).toUpperCase()}
+                      {users?.firstName?.charAt(0).toUpperCase() +
+                        users?.lastName?.charAt(0).toUpperCase()}
                     </div>
                   )}
 
@@ -163,12 +173,13 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
                   </div>
 
                   <div>
+                    <div>{getUnreadMessageCount(users._id)}</div>
                     <div className="last-message-timestamp">
                       {getLastMessageTimesStamp(users._id)}
                     </div>
                   </div>
 
-                  {!allChats?.some((chat: any) =>
+                  {!allChat?.some((chat: any) =>
                     chat.members.map((m: any) => m._id).includes(users._id),
                   ) && (
                     <div className="user-start-chat">
