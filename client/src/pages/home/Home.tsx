@@ -7,12 +7,14 @@ import { useEffect } from "react";
 
 const Home = () => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
-  const user = useSelector((state: any) => state.user.user);
+  const users = useSelector((state: any) => state.user.user);
   const socket = io("http://localhost:8000");
 
   useEffect(() => {
-    socket.emit("join-room", user._id);
-  }, []);
+    if (users) {
+      socket.emit("join-room", users._id);
+    }
+  }, [users]);
   return (
     <div className="home-page">
       <Header />

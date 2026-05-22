@@ -1,11 +1,11 @@
 import { useEffect, type ReactNode } from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate, type NavigateFunction } from "react-router-dom";
+import { getAllChats } from "../apiCalls/chat";
 import { getALlUser, getLoggedUser } from "../apiCalls/users";
 import { hideLoader, showLoader } from "../redux/loaderSlice";
 import { setAllChats, setAllUsers, setUser } from "../redux/userSlice";
-import { getAllChats } from "../apiCalls/chat";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -17,7 +17,7 @@ interface ProtectedRouteProps {
 // };
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const user = useSelector((state: any) => state.user.user);
+  // const users = useSelector((state: any) => state.user.user);
   const navigate: NavigateFunction = useNavigate();
 
   const dispatch = useDispatch();
