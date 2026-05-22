@@ -30,7 +30,7 @@ export const clearReadChatServices = async (id: string) => {
       throw Error("Chat not found");
     }
 
-    const chatUpdate = chatModels
+    const chatUpdate = await chatModels
       .findByIdAndUpdate(
         id,
         {
@@ -40,12 +40,17 @@ export const clearReadChatServices = async (id: string) => {
       )
       .populate("members")
       .populate("lastMessage");
-    await messageModels.updateMany({
-      id: id,
-      read: false,
-    },{
-      read:true
-    });
+    await messageModels.updateMany(
+      {
+        chatId: id,
+        read: false,
+      },
+      {
+        $set: {
+          read: true,
+        },
+      },
+    );
     return chatUpdate;
   } catch (error: any) {
     throw new Error(error.message);

@@ -108,103 +108,102 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
       return "";
     }
   };
+
+  function getData() {
+    return searchKey === ""
+      ? allChat
+      : allUsers.filter(
+          (user: any) =>
+            user.firstName.toLowerCase().includes(searchKey.toLowerCase()) ||
+            user.lastName.toLowerCase().includes(searchKey.toLowerCase()),
+        );
+  }
   return (
     <>
-      {allUsers
-        ?.filter((users: any) => {
-          return (
-            (searchKey &&
-              (users.firstName
-                .toLowerCase()
-                .includes(searchKey.toLowerCase()) ||
-                users.lastName
-                  .toLowerCase()
-                  .includes(searchKey.toLowerCase()))) ||
-            allChat.some((chat: any) =>
-              chat.members.map((m: any) => m._id).includes(users._id),
-            )
-          );
-        })
-        .map((users: any) => {
-          return (
+      {getData()?.map((obj: any) => {
+        let users = obj;
+        if (obj.members) {
+          users = obj.members.find((mem: any) => mem._id !== currentUser._id);
+        }
+        return (
+          <div
+            className="user-search-filter"
+            key={users._id}
+            onClick={() => openChat(users._id)}
+          >
             <div
-              className="user-search-filter"
-              key={users._id}
-              onClick={() => openChat(users._id)}
+              className={
+                isSelectedChat(users) ? "selected-user" : "filtered-user"
+              }
             >
-              <div
-                className={
-                  isSelectedChat(users) ? "selected-user" : "filtered-user"
-                }
-              >
-                <div className="filter-user-display">
-                  {users.profileImage ? (
-                    <img
-                      src={users.profileImage}
-                      alt="Profile Pic"
-                      className="user-default-avatar"
-                    />
-                  ) : (
-                    <div
-                      className={
-                        isSelectedChat(users)
-                          ? "user-selected-avatar"
-                          : "user-default-avatar"
-                      }
-                    >
-                      {users?.firstName?.charAt(0).toUpperCase() +
-                        users?.lastName?.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-
-                  <div className="filter-user-details">
-                    <div
-                      className={
-                        isSelectedChat(users)
-                          ? "user-selected-name"
-                          : "user-display-name"
-                      }
-                    >
-                      {formatName(users)}
-                    </div>
-                    <div
-                      className={
-                        isSelectedChat(users)
-                          ? "user-selected-email"
-                          : "user-display-email"
-                      }
-                    >
-                      {getLastMsg(users._id) || users.email}
-                    </div>
+              <div className="filter-user-display">
+                {users.profileImage ? (
+                  <img
+                    src={users.profileImage}
+                    alt="Profile Pic"
+                    className="user-default-avatar"
+                  />
+                ) : (
+                  <div
+                    className={
+                      isSelectedChat(users)
+                        ? "user-selected-avatar"
+                        : "user-default-avatar"
+                    }
+                  >
+                    {users?.firstName?.charAt(0).toUpperCase() +
+                      users?.lastName?.charAt(0).toUpperCase()}
                   </div>
+                )}
 
-                  <div>
-                    {getUnreadMessageCount(users._id)}
-                    <div className="last-message-timestamp">
-                      {getLastMessageTimesStamp(users._id)}
-                    </div>
+                <div className="filter-user-details">
+                  <div
+                    className={
+                      isSelectedChat(users)
+                        ? "user-selected-name"
+                        : "user-display-name"
+                    }
+                  >
+                    {formatName(users)}
                   </div>
-
-                  {!allChat?.some((chat: any) =>
-                    chat.members.map((m: any) => m._id).includes(users._id),
-                  ) && (
-                    <div className="user-start-chat">
-                      <button
-                        className="user-start-chat-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          startNewChat(users._id);
-                        }}
-                      >
-                        Start Chat
-                      </button>
-                    </div>
-                  )}
+                  <div
+                    className={
+                      isSelectedChat(users)
+                        ? "user-selected-email"
+                        : "user-display-email"
+                    }
+                  >
+                    {getLastMsg(users._id) || users.email}
+                  </div>
                 </div>
+
+                <div>
+                  {getUnreadMessageCount(users._id)}
+                  <div className="last-message-timestamp">
+                    {getLastMessageTimesStamp(users._id)}
+                  </div>
+                </div>
+
+                {!allChat?.some((chat: any) =>
+                  chat.members.map((m: any) => m._id).includes(users._id),
+                ) && (
+                  <div className="user-start-chat">
+                    <button
+                      className="user-start-chat-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        startNewChat(users._id);
+                      }}
+                    >
+                      Start Chat
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
-          );
-        })}
+          </div>
+        );
+      })}
     </>
   );
 };

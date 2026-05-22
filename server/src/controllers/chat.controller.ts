@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AuthRequest } from "../middleware/auth.middleware";
 import {
   clearReadChatServices,
   createChatServices,
@@ -8,8 +9,6 @@ import {
   sendErrorResponse,
   sendSuccessResponse,
 } from "../utils/responseHelper";
-import { AuthRequest } from "../middleware/auth.middleware";
-import { channel } from "diagnostics_channel";
 
 class chatController {
   static async createChat(req: Request, res: Response) {
@@ -36,8 +35,8 @@ class chatController {
 
   static async clearReadChat(req: AuthRequest, res: Response) {
     try {
-      const id = req.body?._id;
-      console.log(id);
+      const id = req.body?.id;
+      console.log("clearchat id", id);
 
       const chat = await clearReadChatServices(id);
 

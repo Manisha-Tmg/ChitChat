@@ -15,7 +15,7 @@ const ChatArea = () => {
   );
 
   const [message, setMessage] = useState<string>("");
-  const [allMessages, setAllMessages] = useState<string[]>([]);
+  const [allMessages, setAllMessages] = useState<any[]>([]);
 
   const dispatch = useDispatch();
   const sendMessage = async () => {
@@ -28,6 +28,7 @@ const ChatArea = () => {
       dispatch(showLoader());
       await createMessage(msg);
       setMessage("");
+      await getMessages();
       dispatch(hideLoader());
     } catch (error: any) {
       dispatch(hideLoader());
@@ -53,6 +54,7 @@ const ChatArea = () => {
     try {
       dispatch(showLoader());
       const res = await clearUnreadMessageCount(selectedChats._id);
+
       if (res.success) {
         allChat.map((chat: any) => {
           if (chat._id === selectedChats._id) {
@@ -61,10 +63,10 @@ const ChatArea = () => {
           return chat;
         });
       }
+
       dispatch(hideLoader());
     } catch (error: any) {
       dispatch(hideLoader());
-
       toast.error(error.message);
     }
   };
@@ -93,10 +95,11 @@ const ChatArea = () => {
 
   function formatName(user: any) {
     let fName: string =
-      user.firstName.at(0).toUpperCase() +
-      user.firstName.slice(1)?.toLowerCase();
+      user.firstName?.at(0).toUpperCase() +
+        user.firstName?.slice(1)?.toLowerCase() || "";
     let lName: string =
-      user.lastName.at(0).toUpperCase() + user.lastName?.slice(1).toLowerCase();
+      user.lastName?.at(0).toUpperCase() +
+        user.lastName?.slice(1).toLowerCase() || "";
     return fName + " " + lName;
   }
   return (
@@ -136,6 +139,12 @@ const ChatArea = () => {
 
                     <div className="message-timestamp">
                       {formatTime(m.createdAt)}
+                      {isCurentUserSender && m.read && (
+                        <i
+                          className="fa fa-check-circle"
+                          style={{ color: "#e74c3c" }}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -154,7 +163,6 @@ const ChatArea = () => {
             />
             <button
               className="fa fa-paper-plane send-message-btn"
-              aria-hidden="true"
               onClick={sendMessage}
             ></button>
           </div>
