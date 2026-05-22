@@ -9,7 +9,7 @@ async function start() {
 
   const appInstance = new App();
 
-  appInstance.app.listen(PORT, () => {
+  appInstance.server.listen(PORT, () => {
     console.log(`🚀 Server running at http://localhost:${PORT}`);
   });
 }

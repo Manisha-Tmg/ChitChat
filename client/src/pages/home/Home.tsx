@@ -2,9 +2,17 @@ import { useSelector } from "react-redux";
 import ChatArea from "./components/ChatArea";
 import Header from "./components/Header";
 import SideBar from "./SideBar";
+import { io } from "socket.io-client";
+import { useEffect } from "react";
 
 const Home = () => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
+  const user = useSelector((state: any) => state.user.user);
+  const socket = io("http://localhost:8000");
+
+  useEffect(() => {
+    socket.emit("join-room", user._id);
+  }, []);
   return (
     <div className="home-page">
       <Header />
