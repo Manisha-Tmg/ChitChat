@@ -14,7 +14,7 @@ export class App {
 
   public io = new Server(this.server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: process.env.CLIENT_URL,
       methods: ["GET", "POST"],
       credentials: true,
     },
@@ -29,7 +29,7 @@ export class App {
   private initializeMiddlewares() {
     this.app.use(
       cors({
-        origin: "http://localhost:3000",
+        origin: process.env.CLIENT_URL,
         credentials: true,
       }),
     );
