@@ -3,10 +3,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const dataBase = process.env.DB_URLL;
+const dataBase = process.env.MONGO_URL;
+console.log(dataBase);
 
 if (!dataBase) {
-  throw new Error("DB_URLL is missing in .env file");
+  throw new Error(`${dataBase} is missing in .env file`);
 }
 
 const connectToDatabase = async () => {
