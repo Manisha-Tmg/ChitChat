@@ -8,7 +8,7 @@ import { useEffect } from "react";
 const Home = () => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
   const users = useSelector((state: any) => state.user.user);
-  const socket = io("http://localhost:8000");
+  const socket = io("http://localhost:10000");
 
   useEffect(() => {
     if (users) {

@@ -12,15 +12,12 @@ export class App {
   public app = express();
   public server = http.createServer(this.app);
 
-  private allowOrigin = [
-    process.env.CLIENT_URL || "",
-    "http://localhost:3000/",
-  ];
+  private allowOrigin = [process.env.CLIENT_URL || "", "http://localhost:3000"];
 
   public io = new Server(this.server, {
     cors: {
       origin: this.allowOrigin,
-      methods: ["GET", "POST"],
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       credentials: true,
     },
   });
@@ -35,6 +32,8 @@ export class App {
     this.app.use(
       cors({
         origin: this.allowOrigin,
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+
         credentials: true,
       }),
     );
