@@ -53,6 +53,10 @@ export class App {
       socket.on("join-room", (userId) => {
         socket.join(userId);
       });
+      socket.on("send-msg", (data) => {
+        socket.to(data.reipient).emit("receive-msg", data.text);
+      });
+
       // console.log("connected with Socket ID: " + socket.id);
 
       socket.on("Disconnect", () => {
