@@ -85,7 +85,8 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
       user?.firstName?.at(0).toUpperCase() +
       user?.firstName?.slice(1)?.toLowerCase();
     let lName: string =
-      user.lastName.at(0).toUpperCase() + user.lastName?.slice(1).toLowerCase();
+      user?.lastName.at(0).toUpperCase() +
+      user?.lastName?.slice(1).toLowerCase();
     return fName + " " + lName;
   }
 
@@ -120,15 +121,16 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
   }
   return (
     <>
-      {getData()?.map((obj: any) => {
+      {getData()?.map((obj: any, index: number) => {
         let users = obj;
         if (obj.members) {
-          users = obj.members.find((mem: any) => mem._id !== currentUser._id);
+          users = obj.members.find((mem: any) => mem._id !== currentUser?._id);
         }
+
         return (
           <div
             className="user-search-filter"
-            key={users._id}
+            key={obj._id || `${users._id}-${index}`}
             onClick={() => openChat(users._id)}
           >
             <div
@@ -137,7 +139,7 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
               }
             >
               <div className="filter-user-display">
-                {users.profileImage ? (
+                {users?.profileImage ? (
                   <img
                     src={users.profileImage}
                     alt="Profile Pic"
