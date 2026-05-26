@@ -13,13 +13,6 @@ const Home = () => {
   useEffect(() => {
     if (users) {
       socket.emit("join-room", users._id);
-      socket.emit("send-msg", {
-        text: "hi",
-        recipient: "6a147b8e4aa80314217f5286",
-      });
-      socket.on("receive-msg", (data) => {
-        console.log(data);
-      });
     }
   }, [users]);
   return (
