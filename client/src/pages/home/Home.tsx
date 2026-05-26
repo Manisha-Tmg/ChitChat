@@ -5,10 +5,11 @@ import SideBar from "./SideBar";
 import { io } from "socket.io-client";
 import { useEffect } from "react";
 
+const socket = io("http://localhost:10000");
+
 const Home = () => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
   const users = useSelector((state: any) => state.user.user);
-  const socket = io("http://localhost:10000");
 
   useEffect(() => {
     if (users) {
@@ -20,7 +21,7 @@ const Home = () => {
       <Header />
       <div className="main-content">
         <SideBar />
-        {selectedChats && <ChatArea />}
+        {selectedChats && <ChatArea socket={socket} />}
       </div>
     </div>
   );

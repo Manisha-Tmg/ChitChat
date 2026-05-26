@@ -5,8 +5,12 @@ import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import { clearUnreadMessageCount } from "../../../apiCalls/chat";
+import type { Socket } from "socket.io-client";
 
-const ChatArea = () => {
+type Props = {
+  socket: Socket;
+};
+const ChatArea = ({ socket }: Props) => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
   const user = useSelector((state: any) => state.user.user);
   const allChat = useSelector((state: any) => state.user.allChats);
