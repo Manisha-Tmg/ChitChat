@@ -22,10 +22,10 @@ const Login = () => {
     event.preventDefault();
     let data = null as any;
     try {
-      dispatch(showLoader());
+      // dispatch(showLoader());
       data = await LoginUser(user);
-      dispatch(hideLoader());
-      const token: string = data?.data?.token;
+      // dispatch(hideLoader());
+      const token: string = data.data.token;
       if (data.success) {
         localStorage.setItem("token", token);
         navigate("/");

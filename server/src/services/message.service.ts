@@ -30,7 +30,6 @@ export const getAllMessageServices = async (chatId: string) => {
     const messages = await messageModels
       .find({ chatId: chatId })
       .sort({ createdAt: 1 });
-    console.log(chatId);
     return messages;
   } catch (error: any) {
     throw new Error(error.message);

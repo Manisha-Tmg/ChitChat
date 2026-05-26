@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import { clearUnreadMessageCount } from "../../../apiCalls/chat";
 import type { Socket } from "socket.io-client";
+import store from "../../../redux/store";
 
 type Props = {
   socket: Socket;
@@ -29,11 +30,15 @@ const ChatArea = ({ socket }: Props) => {
         text: message,
         sender: user._id,
       };
-      dispatch(showLoader());
+      socket.emit("send-msg", {
+        ...msg,
+        members: selectedChats.members.map((m: any) => m._id),
+        read: false,
+        createdAt: moment().format("DD-MM-YYYY HH:mm:ss"),
+      });
       await createMessage(msg);
       setMessage("");
       await getMessages();
-      dispatch(hideLoader());
     } catch (error: any) {
       dispatch(hideLoader());
       toast.error(error.message);
@@ -77,10 +82,31 @@ const ChatArea = ({ socket }: Props) => {
 
   useEffect(() => {
     getMessages();
+
     if (selectedChats?.lastMessage?.sender !== user._id) {
       clearUnreadMessage();
     }
+
+    const handler = (data: any) => {
+      const selectedChats = store.getState().user.selectedChat as any;
+
+      if (selectedChats?._id === data.chatId) {
+        setAllMessages((prev) => [...prev, data]);
+      }
+    };
+
+    socket.on("receive-msg", handler);
+
+    return () => {
+      socket.off("receive-msg", handler);
+    };
   }, [selectedChats]);
+  useEffect(() => {
+    const msgContainer = document.getElementById("main-chat-area");
+    if (msgContainer) {
+      msgContainer.scrollTop = msgContainer.scrollHeight;
+    }
+  }, [allMessages]);
 
   const formatTime = (timeStamp: string) => {
     const messageTime = moment(timeStamp);
@@ -111,7 +137,7 @@ const ChatArea = ({ socket }: Props) => {
       {selectedChats && (
         <div className="app-chat-area">
           <div className="app-chat-area-header">{formatName(selectedUser)}</div>
-          <div className="main-chat-area">
+          <div className="main-chat-area" id="main-chat-area">
             {allMessages.map((m: any, i: any) => {
               const isCurentUserSender = m.sender === user._id;
               return (

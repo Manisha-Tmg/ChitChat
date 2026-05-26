@@ -36,7 +36,6 @@ class chatController {
   static async clearReadChat(req: AuthRequest, res: Response) {
     try {
       const id = req.body?.id;
-      console.log("clearchat id", id);
 
       const chat = await clearReadChatServices(id);
 

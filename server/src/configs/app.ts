@@ -53,8 +53,11 @@ export class App {
       socket.on("join-room", (userId) => {
         socket.join(userId);
       });
-      socket.on("send-msg", (data) => {
-        socket.to(data.reipient).emit("receive-msg", data.text);
+      socket.on("send-msg", (message) => {
+        this.io
+          .to(message.members[0])
+          .to(message.members[1])
+          .emit("receive-msg", message);
       });
 
       // console.log("connected with Socket ID: " + socket.id);
