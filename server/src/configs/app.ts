@@ -39,7 +39,7 @@ export class App {
     );
     this.app.use(express.json());
   }
-
+  private onlineUser: string[] = [];
   private initializeRoutes() {
     this.app.use("/api/users", authRouter);
     this.app.use("/api/users/protected", router);
@@ -70,6 +70,13 @@ export class App {
           .to(data?.members[0])
           .to(data?.members[1])
           .emit("started-typing", data);
+      });
+
+      socket.on("user-logged", (userId) => {
+        if (!this.onlineUser.includes(userId)) {
+          this.onlineUser.push(userId);
+        }
+        socket.emit("onlne-user", this.onlineUser);
       });
 
       // console.log("connected with Socket ID: " + socket.id);

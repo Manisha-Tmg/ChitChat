@@ -555,7 +555,9 @@ i {
   font-size: 13px;
   color: grey;
 }
-
+.online-border {
+  border: 3px solid green;
+}
 /*PROFILE PAGE*/
 
 .profile-page-container {

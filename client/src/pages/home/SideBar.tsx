@@ -5,8 +5,9 @@ import type { Socket } from "socket.io-client";
 
 type Props = {
   socket: Socket;
+  onlineUser: any;
 };
-const SideBar = ({ socket }: Props) => {
+const SideBar = ({ socket, onlineUser }: Props) => {
   const [searchKey, setSearchKey] = useState("");
 
   return (
@@ -15,7 +16,7 @@ const SideBar = ({ socket }: Props) => {
       <UserList
         searchKey={searchKey}
         socket={socket}
-        // onlineUser={onlineUser}
+        onlineUser={onlineUser}
       ></UserList>
     </div>
   );

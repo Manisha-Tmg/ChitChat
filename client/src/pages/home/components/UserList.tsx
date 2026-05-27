@@ -11,8 +11,9 @@ import { setAllChats, setSelectedChat } from "../../../redux/userSlice";
 type Props = {
   searchKey: string;
   socket: Socket;
+  onlineUser: any;
 };
-const UserList = ({ searchKey, socket }: Props) => {
+const UserList = ({ searchKey, socket, onlineUser }: Props) => {
   const allUsers = useSelector((state: any) => state.user.allUsers);
   const allChat = useSelector((state: any) => state.user.allChats);
   const currentUser = useSelector((state: any) => state.user.user);
@@ -181,6 +182,11 @@ const UserList = ({ searchKey, socket }: Props) => {
                   <img
                     src={users.profileImage}
                     alt="Profile Pic"
+                    style={
+                      onlineUser.includes(users._id)
+                        ? { border: "green 3px solid" }
+                        : {}
+                    }
                     className="user-default-avatar"
                   />
                 ) : (
@@ -189,6 +195,11 @@ const UserList = ({ searchKey, socket }: Props) => {
                       isSelectedChat(users)
                         ? "user-selected-avatar"
                         : "user-default-avatar"
+                    }
+                    style={
+                      onlineUser.includes(users._id)
+                        ? { border: "green 3px solid" }
+                        : {}
                     }
                   >
                     {users?.firstName?.charAt(0).toUpperCase() +
