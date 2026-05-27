@@ -18,8 +18,18 @@ export const getALlUser = async () => {
       `${API}/users/protected/get-all-users`,
     );
     return response.data;
-    
   } catch (error: any) {
+    return error;
+  }
+};
+export const uploadProfilePic = async (image: any) => {
+  try {
+    const response = await axiosInstance.post(
+      `${API}api/user/upload-profile-pic`,
+      { image },
+    );
+    return response.data;
+  } catch (error) {
     return error;
   }
 };

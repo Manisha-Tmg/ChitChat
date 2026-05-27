@@ -8,6 +8,7 @@ import { createMessage, getAllMessages } from "../../../apiCalls/message";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import store from "../../../redux/store";
 import { setAllChats } from "../../../redux/userSlice";
+import EmojiPicker from "emoji-picker-react";
 
 type Props = {
   socket: Socket;
@@ -31,6 +32,7 @@ const ChatArea = ({ socket }: Props) => {
   const [message, setMessage] = useState<string>("");
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [allMessages, setAllMessages] = useState<Message[]>([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const dispatch = useDispatch();
   const sendMessage = async () => {
@@ -235,6 +237,21 @@ const ChatArea = ({ socket }: Props) => {
               {isTyping && <i>typing.....</i>}
             </div>
           </div>
+          {showEmojiPicker && (
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                padding: "0px 20px",
+                justifyContent: "right",
+              }}
+            >
+              <EmojiPicker
+                style={{ width: "300px", height: "320px" }}
+                onEmojiClick={(e) => setMessage(message + e.emoji)}
+              ></EmojiPicker>
+            </div>
+          )}
           <div className="send-message-div">
             <input
               type="text"
@@ -251,6 +268,12 @@ const ChatArea = ({ socket }: Props) => {
                 });
               }}
             />
+            <button
+              className="fa fa-smile-o send-emoji-btn"
+              onClick={() => {
+                setShowEmojiPicker(!showEmojiPicker);
+              }}
+            ></button>
             <button
               className="fa fa-paper-plane send-message-btn"
               onClick={sendMessage}

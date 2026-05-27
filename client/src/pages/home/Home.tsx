@@ -5,7 +5,7 @@ import SideBar from "./SideBar";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 
-const socket = io("https://chitchat-zchf.onrender.com");
+const socket = io("http://localhost:10000");
 
 const Home = () => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
