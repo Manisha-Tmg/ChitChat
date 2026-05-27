@@ -5,6 +5,7 @@ import {
   loginUserServices,
   readUserBYIdServices,
   registerUserServices,
+  uploadProfilePicService,
   userProfileServices,
 } from "../services/auth.service";
 import {
@@ -73,6 +74,31 @@ class AuthController {
       return sendSuccessResponse(res, "User profile fetched", user, 200);
     } catch (err: any) {
       return sendErrorResponse(res, "Error to fetch the data", 400);
+    }
+  }
+  
+  static async uploadProfilePic(req: AuthRequest, res: Response) {
+    try {
+      const { image, userId } = req.body;
+
+      if (!image || !userId) {
+        return sendErrorResponse(res, "Image and userId are required", 400);
+      }
+
+      const user = await uploadProfilePicService(image, userId);
+
+      return sendSuccessResponse(
+        res,
+        "User profile uploaded successfully",
+        user,
+        200,
+      );
+    } catch (err: any) {
+      return sendErrorResponse(
+        res,
+        err.message || "Error uploading profile picture",
+        400,
+      );
     }
   }
 }

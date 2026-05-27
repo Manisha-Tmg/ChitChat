@@ -1,6 +1,7 @@
 import userModels from "../database/models/user.models";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import cloudinary from "../utils/cloudinary";
 
 export const registerUserServices = async (
   firstName: string,
@@ -91,6 +92,33 @@ export const readUserBYIdServices = async (id: string) => {
   try {
     const users = await userModels.findById(id);
     return users;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export const uploadProfilePicService = async (
+  image: string,
+  userId: string,
+) => {
+  try {
+    // Upload image to Cloudinary
+    const uploadedImage = await cloudinary.uploader.upload(image, {
+      folder: "ChitChat",
+    });
+
+    // Update user profile image
+    const updatedUser = await userModels.findByIdAndUpdate(
+      userId,
+      {
+        profileImage: uploadedImage.secure_url,
+      },
+      {
+        new: true,
+      },
+    );
+
+    return updatedUser;
   } catch (error: any) {
     throw new Error(error.message);
   }
