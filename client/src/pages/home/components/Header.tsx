@@ -37,15 +37,15 @@ const Header = ({ socket }: Props) => {
       </div>
 
       <div className="app-user-profile">
-        {user?.profilePic && (
+        {user?.profileImage && (
           <img
-            src={user?.profilePic}
+            src={user?.profileImage}
             alt="profile-pic"
             className="logged-user-profile-pic"
             onClick={() => navigate("/profile")}
           ></img>
         )}
-        {!user?.profilePic && (
+        {!user?.profileImage && (
           <div
             className="logged-user-profile-pic"
             onClick={() => navigate("/profile")}

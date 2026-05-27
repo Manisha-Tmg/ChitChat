@@ -25,7 +25,7 @@ export const getALlUser = async () => {
 export const uploadProfilePic = async (image: any) => {
   try {
     const response = await axiosInstance.post(
-      `${API}api/user/upload-profile-pic`,
+      `${API}/users/protected/upload-profile-pic`,
       { image },
     );
     return response.data;

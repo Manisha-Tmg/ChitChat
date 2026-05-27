@@ -97,10 +97,7 @@ export const readUserBYIdServices = async (id: string) => {
   }
 };
 
-export const uploadProfilePicService = async (
-  image: string,
-  userId: string,
-) => {
+export const uploadProfilePicService = async (image: any, id: any) => {
   try {
     // Upload image to Cloudinary
     const uploadedImage = await cloudinary.uploader.upload(image, {
@@ -109,7 +106,7 @@ export const uploadProfilePicService = async (
 
     // Update user profile image
     const updatedUser = await userModels.findByIdAndUpdate(
-      userId,
+      { _id: id },
       {
         profileImage: uploadedImage.secure_url,
       },

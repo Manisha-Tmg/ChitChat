@@ -76,16 +76,18 @@ class AuthController {
       return sendErrorResponse(res, "Error to fetch the data", 400);
     }
   }
-  
+
   static async uploadProfilePic(req: AuthRequest, res: Response) {
     try {
-      const { image, userId } = req.body;
+      const { image } = req.body;
+      const id = req.user.id;
 
-      if (!image || !userId) {
-        return sendErrorResponse(res, "Image and userId are required", 400);
-      }
-
-      const user = await uploadProfilePicService(image, userId);
+      // if (!image || !id) {
+      //   return sendErrorResponse(res, "Image and id are required", 400);
+      // }
+      console.log("IMAGE:", req.body.image);
+      console.log("USER:", req.user);
+      const user = await uploadProfilePicService(image, id);
 
       return sendSuccessResponse(
         res,

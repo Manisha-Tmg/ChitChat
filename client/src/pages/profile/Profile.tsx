@@ -12,8 +12,8 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (users?.profilePic) {
-      setImage(users.profilePic);
+    if (users?.profileImage) {
+      setImage(users.profileImage);
     }
   }, [users]);
   function getInitials() {
