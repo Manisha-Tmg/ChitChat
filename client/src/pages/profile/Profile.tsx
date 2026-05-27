@@ -7,30 +7,34 @@ import { uploadProfilePic } from "../../apiCalls/users";
 import moment from "moment";
 
 const Profile = () => {
-  const user = useSelector((state: any) => state.user.user);
+  const users = useSelector((state: any) => state.user.user);
   const [image, setImage] = useState<string>("");
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user?.profilePic) {
-      setImage(user.profilePic);
+    if (users?.profilePic) {
+      setImage(users.profilePic);
     }
-  }, [user]);
-
+  }, [users]);
   function getInitials() {
-    let f = user?.firstname.toUpperCase()[0];
-    let l = user?.lastname.toUpperCase()[0];
+    const f = users?.firstname?.charAt(0)?.toUpperCase() || "";
+    const l = users?.lastname?.charAt(0)?.toUpperCase() || "";
+
     return f + l;
   }
 
   function getFullname() {
-    let fname =
-      user?.firstname.at(0).toUpperCase() +
-      user?.firstname.slice(1).toLowerCase();
-    let lname =
-      user?.lastname.at(0).toUpperCase() +
-      user?.lastname.slice(1).toLowerCase();
-    return fname + " " + lname;
+    const fname = users?.firstname
+      ? users.firstname.charAt(0).toUpperCase() +
+        users.firstname.slice(1).toLowerCase()
+      : "";
+
+    const lname = users?.lastname
+      ? users.lastname.charAt(0).toUpperCase() +
+        users.lastname.slice(1).toLowerCase()
+      : "";
+
+    return `${fname} ${lname}`.trim();
   }
   const onFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -86,11 +90,11 @@ const Profile = () => {
           <h1>{getFullname()}</h1>
         </div>
         <div>
-          <b>Email: </b> {user?.email}
+          <b>Email: </b> {users?.email}
         </div>
         <div>
           <b>Account Created: </b>
-          {moment(user?.createdAt).format("MMM DD, YYYY")}
+          {moment(users?.createdAt).format("MMM DD, YYYY")}
         </div>
         <div className="select-profile-pic-container">
           <input type="file" onChange={onFileSelect} />

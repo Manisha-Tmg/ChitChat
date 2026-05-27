@@ -22,7 +22,7 @@ const Home = () => {
   }, [users]);
   return (
     <div className="home-page">
-      <Header />
+      <Header socket={socket} />
       <div className="main-content">
         <SideBar socket={socket} onlineUser={onlineUser} />
         {selectedChats && <ChatArea socket={socket} />}
