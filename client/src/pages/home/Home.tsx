@@ -10,12 +10,15 @@ const socket = io("http://localhost:10000");
 const Home = () => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
   const users = useSelector((state: any) => state.user.user);
-  const [onlineUser, setOnlineUser] = useState();
+  const [onlineUser, setOnlineUser] = useState([]);
   useEffect(() => {
     if (users) {
       socket.emit("join-room", users._id);
       socket.emit("user-logged", users._id);
       socket.on("onlne-user", (onlineUsers) => {
+        setOnlineUser(onlineUsers);
+      });
+      socket.on("online-users-updated", (onlineUsers) => {
         setOnlineUser(onlineUsers);
       });
     }

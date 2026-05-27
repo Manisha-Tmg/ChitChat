@@ -11,8 +11,8 @@ import {
 class messageController {
   static async createMessage(req: Request, res: Response) {
     try {
-      const { chatId, text, sender } = req.body;
-      const messages = await createMessageServices(chatId, text, sender);
+      const { chatId, text, sender, image } = req.body;
+      const messages = await createMessageServices(chatId, text, sender, image);
       return sendSuccessResponse(
         res,
         "Message created successfully",

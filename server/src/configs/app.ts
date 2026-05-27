@@ -79,6 +79,11 @@ export class App {
         socket.emit("onlne-user", this.onlineUser);
       });
 
+      socket.on("user-offline", (userId) => {
+        this.onlineUser.splice(this.onlineUser.indexOf(userId), 1);
+        this.io.emit("online-users-updated", this.onlineUser);
+      });
+
       // console.log("connected with Socket ID: " + socket.id);
 
       socket.on("Disconnect", () => {

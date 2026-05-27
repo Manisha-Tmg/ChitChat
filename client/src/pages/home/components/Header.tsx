@@ -6,28 +6,28 @@ type Props = {
   socket: Socket;
 };
 const Header = ({ socket }: Props) => {
-  const user = useSelector((state: any) => state.user.user);
+  const users = useSelector((state: any) => state.user.user);
   const navigate = useNavigate();
 
   function getFullName() {
     const fName: string =
-      user?.firstName?.charAt(0).toUpperCase() +
-        user?.firstName?.slice(1).toLowerCase() || "";
+      users?.firstName?.charAt(0).toUpperCase() +
+        users?.firstName?.slice(1).toLowerCase() || "";
     const lName: string =
-      user?.lastName?.charAt(0).toUpperCase() +
-        user?.lastName?.slice(1).toLowerCase() || "";
+      users?.lastName?.charAt(0).toUpperCase() +
+        users?.lastName?.slice(1).toLowerCase() || "";
     return fName + " " + lName;
   }
 
   function getInitial() {
-    const fName: string = user?.firstName?.toUpperCase()[0] || "";
-    const lName: string = user?.lastName?.toUpperCase()[0] || "";
+    const fName: string = users?.firstName?.toUpperCase()[0] || "";
+    const lName: string = users?.lastName?.toUpperCase()[0] || "";
     return fName + lName;
   }
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
-    socket.emit("user-offline", user._id);
+    socket.emit("user-offline", users._id);
   };
   return (
     <div className="app-header">
@@ -37,15 +37,15 @@ const Header = ({ socket }: Props) => {
       </div>
 
       <div className="app-user-profile">
-        {user?.profileImage && (
+        {users?.profileImage && (
           <img
-            src={user?.profileImage}
+            src={users?.profileImage}
             alt="profile-pic"
             className="logged-user-profile-pic"
             onClick={() => navigate("/profile")}
           ></img>
         )}
-        {!user?.profileImage && (
+        {!users?.profileImage && (
           <div
             className="logged-user-profile-pic"
             onClick={() => navigate("/profile")}

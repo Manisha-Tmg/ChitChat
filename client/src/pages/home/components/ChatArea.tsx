@@ -13,11 +13,13 @@ import EmojiPicker from "emoji-picker-react";
 type Props = {
   socket: Socket;
 };
+
 type Message = {
   _id: string;
   sender: string;
   chatId: string;
   text: string;
+  image?: string;
   read: boolean;
   createdAt: string;
 };
@@ -26,31 +28,40 @@ const ChatArea = ({ socket }: Props) => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
   const user = useSelector((state: any) => state.user.user);
   const allChat = useSelector((state: any) => state.user.allChats);
+
   const selectedUser = selectedChats?.members.find(
     (u: any) => u._id !== user._id,
   );
+
   const [message, setMessage] = useState<string>("");
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [allMessages, setAllMessages] = useState<Message[]>([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const dispatch = useDispatch();
-  const sendMessage = async () => {
+
+  const sendMessage = async (image: any) => {
     try {
+      if (!selectedChats?._id) return;
+      if (!message && !image) return;
+
       const msg: any = {
         chatId: selectedChats._id,
         text: message,
         sender: user._id,
+        image: image,
       };
+
       socket.emit("send-msg", {
         ...msg,
         members: selectedChats.members.map((m: any) => m._id),
         read: false,
         createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       });
+
       await createMessage(msg);
-      setMessage("");
-      // await getMessages();
+
+      setMessage(""); // FIX
     } catch (error: any) {
       dispatch(hideLoader());
       toast.error(error.message);
@@ -59,34 +70,44 @@ const ChatArea = ({ socket }: Props) => {
 
   const getMessages = async () => {
     try {
+      if (!selectedChats?._id) return;
+
       dispatch(showLoader());
       const res = await getAllMessages(selectedChats._id);
+
       if (res.success) {
         setAllMessages(res.data);
       }
+
       dispatch(hideLoader());
     } catch (error: any) {
       dispatch(hideLoader());
-
       toast.error(error.message);
     }
   };
+
   const clearUnreadMessage = async () => {
     try {
+      if (!selectedChats?._id) return;
+
       socket.emit("clear-unread-msg", {
         chatId: selectedChats._id,
         members: selectedChats.members.map((m: any) => m._id),
       });
+
       dispatch(showLoader());
+
       const res = await clearUnreadMessageCount(selectedChats._id);
 
       if (res.success) {
-        allChat.map((chat: any) => {
+        const updatedChats = allChat.map((chat: any) => {
           if (chat._id === selectedChats._id) {
             return res.data;
           }
           return chat;
         });
+
+        dispatch(setAllChats(updatedChats));
       }
 
       dispatch(hideLoader());
@@ -109,6 +130,7 @@ const ChatArea = ({ socket }: Props) => {
       if (selectedChats?._id === message.chatId) {
         setAllMessages((prev) => [...prev, message]);
       }
+
       if (
         selectedChats?._id === message.chatId &&
         message.sender !== user._id
@@ -118,39 +140,38 @@ const ChatArea = ({ socket }: Props) => {
     };
 
     socket.on("receive-msg", handler);
+
     socket.on("msg-count-clear", (data) => {
       const selectedChats = store.getState().user.selectedChat as any;
       const allChat = store.getState().user.allChats as any[];
-      if (selectedChats?._id === data.chatId) {
-        // updating unread property in message obj
 
+      if (selectedChats?._id === data.chatId) {
         const updatedchats = allChat.map((chat) => {
           if (chat?._id === data.chatId) {
             return { ...chat, unreadMessageCount: 0 };
           }
           return chat;
         });
+
         dispatch(setAllChats(updatedchats));
 
-        // updating read property in message obj
-        setAllMessages((preMsg) => {
-          return preMsg.map((msg) => {
-            return { ...msg, read: true };
-          });
-        });
+        setAllMessages((preMsg) =>
+          preMsg.map((msg) => ({ ...msg, read: true })),
+        );
       }
     });
 
     socket.on("started-typing", (data) => {
       if (selectedChats?._id === data.chatId && data.sender !== user._id) {
         setIsTyping(true);
-        setTimeout(() => {
-          setIsTyping(false);
-        }, 2000);
+        setTimeout(() => setIsTyping(false), 2000);
       }
     });
+
     return () => {
       socket.off("receive-msg", handler);
+      socket.off("msg-count-clear");
+      socket.off("started-typing");
     };
   }, [selectedChats]);
 
@@ -180,19 +201,38 @@ const ChatArea = ({ socket }: Props) => {
     let fName: string =
       user.firstName?.at(0).toUpperCase() +
         user.firstName?.slice(1)?.toLowerCase() || "";
+
     let lName: string =
       user.lastName?.at(0).toUpperCase() +
         user.lastName?.slice(1).toLowerCase() || "";
+
     return fName + " " + lName;
   }
+
+  const sendImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onloadend = () => {
+      if (typeof reader.result === "string") {
+        sendMessage(reader.result);
+      }
+    };
+  };
+
   return (
     <>
       {selectedChats && (
         <div className="app-chat-area">
           <div className="app-chat-area-header">{formatName(selectedUser)}</div>
+
           <div className="main-chat-area" id="main-chat-area">
             {allMessages.map((m, i) => {
               const isCurentUserSender = m.sender === user._id;
+
               return (
                 <div
                   className="message-container"
@@ -218,6 +258,18 @@ const ChatArea = ({ socket }: Props) => {
                       }
                     >
                       {m.text}
+
+                      {m.image && (
+                        <img
+                          src={m.image}
+                          alt="chat-img"
+                          style={{
+                            maxWidth: "200px",
+                            marginTop: "5px",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      )}
                     </div>
 
                     <div className="message-timestamp">
@@ -233,10 +285,12 @@ const ChatArea = ({ socket }: Props) => {
                 </div>
               );
             })}
+
             <div className="typing-indicator">
               {isTyping && <i>typing.....</i>}
             </div>
           </div>
+
           {showEmojiPicker && (
             <div
               style={{
@@ -248,10 +302,13 @@ const ChatArea = ({ socket }: Props) => {
             >
               <EmojiPicker
                 style={{ width: "300px", height: "320px" }}
-                onEmojiClick={(e) => setMessage(message + e.emoji)}
-              ></EmojiPicker>
+                onEmojiClick={(emojiData) =>
+                  setMessage((prev) => prev + emojiData.emoji)
+                }
+              />
             </div>
           )}
+
           <div className="send-message-div">
             <input
               type="text"
@@ -262,21 +319,32 @@ const ChatArea = ({ socket }: Props) => {
                 setMessage(e.target.value);
 
                 socket.emit("user-typing", {
-                  chatId: selectedChats._id,
+                  chatId: selectedChats?._id,
                   members: selectedChats.members.map((m: any) => m._id),
                   sender: user._id,
                 });
               }}
             />
+
+            <label htmlFor="file">
+              <i className="fa fa-picture-o send-image-btn"></i>
+              <input
+                type="file"
+                id="file"
+                style={{ display: "none" }}
+                accept="image/jpg,image/png,image/jpeg,image/gif"
+                onChange={sendImage}
+              />
+            </label>
+
             <button
               className="fa fa-smile-o send-emoji-btn"
-              onClick={() => {
-                setShowEmojiPicker(!showEmojiPicker);
-              }}
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             ></button>
+
             <button
               className="fa fa-paper-plane send-message-btn"
-              onClick={sendMessage}
+              onClick={() => sendMessage("")}
             ></button>
           </div>
         </div>

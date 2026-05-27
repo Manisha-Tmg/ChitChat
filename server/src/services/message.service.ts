@@ -4,10 +4,16 @@ import messageModels from "../database/models/message.models";
 export const createMessageServices = async (
   chatId: string,
   text: string,
-  sender: any,
+  sender: string,
+  image: string,
 ) => {
   try {
-    const newMessage = await messageModels.create({ chatId, text, sender });
+    const newMessage = await messageModels.create({
+      chatId,
+      text,
+      sender,
+      image,
+    });
     await chatModels.findByIdAndUpdate(
       chatId,
       {

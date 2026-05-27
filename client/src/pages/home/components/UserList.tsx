@@ -183,7 +183,7 @@ const UserList = ({ searchKey, socket, onlineUser }: Props) => {
                     src={users.profileImage}
                     alt="Profile Pic"
                     style={
-                      onlineUser.includes(users._id)
+                      onlineUser?.includes(users._id)
                         ? { border: "green 3px solid" }
                         : {}
                     }
@@ -197,7 +197,7 @@ const UserList = ({ searchKey, socket, onlineUser }: Props) => {
                         : "user-default-avatar"
                     }
                     style={
-                      onlineUser.includes(users._id)
+                      onlineUser?.includes(users._id)
                         ? { border: "green 3px solid" }
                         : {}
                     }
