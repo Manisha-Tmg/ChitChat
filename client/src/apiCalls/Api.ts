@@ -1,1 +1,1 @@
-export const API = "http://localhost:40000/api";
+export const API = "https://chitchat-zchf.onrender.com/api";
