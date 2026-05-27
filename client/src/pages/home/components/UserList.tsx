@@ -130,7 +130,7 @@ const UserList = ({ searchKey, socket }: Props) => {
   useEffect(() => {
     socket.on("receive-msg", (message) => {
       const selectedChats = store.getState().user.selectedChat as any;
-      const allChat = store.getState().user.allChats as any;
+      let allChat = store.getState().user.allChats as any;
       if (selectedChats?._id !== message.chatId) {
         const updatedChat = allChat.map((chat: any) => {
           if (chat._id === message.chatId) {
@@ -142,8 +142,19 @@ const UserList = ({ searchKey, socket }: Props) => {
           }
           return chat;
         });
-        dispatch(setAllChats(updatedChat));
+        allChat = updatedChat;
       }
+      //1.find latest chat
+      const latestChat = allChat.find(
+        (chat: any) => chat._id === message.chatId,
+      );
+      // 2.Get all other chats
+      const otherChats = allChat.filter(
+        (chat: any) => chat._id !== message.chatId,
+      );
+      // 3.Create new array latest chat on the top &then others
+      allChat = [latestChat, ...otherChats];
+      dispatch(setAllChats(allChat));
     });
   }, []);
   return (
