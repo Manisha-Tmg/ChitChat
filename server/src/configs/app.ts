@@ -55,9 +55,15 @@ export class App {
       });
       socket.on("send-msg", (message) => {
         this.io
-          .to(message.members[0])
-          .to(message.members[1])
+          .to(message?.members[0])
+          .to(message?.members[1])
           .emit("receive-msg", message);
+      });
+      socket.on("clear-unread-msg", (data) => {
+        this.io
+          .to(data?.members[0])
+          .to(data?.members[1])
+          .emit("msg-count-clear", data);
       });
 
       // console.log("connected with Socket ID: " + socket.id);

@@ -7,10 +7,20 @@ import { clearUnreadMessageCount } from "../../../apiCalls/chat";
 import { createMessage, getAllMessages } from "../../../apiCalls/message";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import store from "../../../redux/store";
+import { setAllChats } from "../../../redux/userSlice";
 
 type Props = {
   socket: Socket;
 };
+type Message = {
+  _id: string;
+  sender: string;
+  chatId: string;
+  text: string;
+  read: boolean;
+  createdAt: string;
+};
+
 const ChatArea = ({ socket }: Props) => {
   const selectedChats = useSelector((state: any) => state.user.selectedChat);
   const user = useSelector((state: any) => state.user.user);
@@ -20,7 +30,7 @@ const ChatArea = ({ socket }: Props) => {
   );
 
   const [message, setMessage] = useState<string>("");
-  const [allMessages, setAllMessages] = useState<any[]>([]);
+  const [allMessages, setAllMessages] = useState<Message[]>([]);
 
   const dispatch = useDispatch();
   const sendMessage = async () => {
@@ -61,6 +71,10 @@ const ChatArea = ({ socket }: Props) => {
   };
   const clearUnreadMessage = async () => {
     try {
+      socket.emit("clear-unread-msg", {
+        chatId: selectedChats._id,
+        members: selectedChats.members.map((m: any) => m._id),
+      });
       dispatch(showLoader());
       const res = await clearUnreadMessageCount(selectedChats._id);
 
@@ -87,19 +101,46 @@ const ChatArea = ({ socket }: Props) => {
       clearUnreadMessage();
     }
 
-    const handler = (data: any) => {
+    const handler = (message: Message) => {
       const selectedChats = store.getState().user.selectedChat as any;
 
-      if (selectedChats?._id === data.chatId) {
-        setAllMessages((prev) => [...prev, data]);
+      if (selectedChats?._id === message.chatId) {
+        setAllMessages((prev) => [...prev, message]);
+      }
+      if (
+        selectedChats?._id === message.chatId &&
+        message.sender !== user._id
+      ) {
+        clearUnreadMessage();
       }
     };
 
     socket.on("receive-msg", handler);
+    socket.on("msg-count-clear", (data) => {
+      const selectedChats = store.getState().user.selectedChat as any;
+      const allChat = store.getState().user.allChats as any[];
+      if (selectedChats?._id === data.chatId) {
+        // updating unread property in message obj
 
-    // return () => {
-    //   socket.off("receive-msg", handler);
-    // };
+        const updatedchats = allChat.map((chat) => {
+          if (chat?._id === data.chatId) {
+            return { ...chat, unreadMessageCount: 0 };
+          }
+          return chat;
+        });
+        dispatch(setAllChats(updatedchats));
+
+        // updating read property in message obj
+        setAllMessages((preMsg) => {
+          return preMsg.map((msg) => {
+            return { ...msg, read: true };
+          });
+        });
+      }
+    });
+    return () => {
+      socket.off("receive-msg", handler);
+    };
   }, [selectedChats]);
   useEffect(() => {
     const msgContainer = document.getElementById("main-chat-area");
@@ -138,7 +179,7 @@ const ChatArea = ({ socket }: Props) => {
         <div className="app-chat-area">
           <div className="app-chat-area-header">{formatName(selectedUser)}</div>
           <div className="main-chat-area" id="main-chat-area">
-            {allMessages.map((m: any, i: any) => {
+            {allMessages.map((m, i) => {
               const isCurentUserSender = m.sender === user._id;
               return (
                 <div
