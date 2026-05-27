@@ -1,12 +1,12 @@
+import moment from "moment";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { clearUnreadMessageCount, createChats } from "../../../apiCalls/chat";
-import { hideLoader, showLoader } from "../../../redux/loaderSlice";
-import { setAllChats, setSelectedChat } from "../../../redux/userSlice";
-import moment from "moment";
 import type { Socket } from "socket.io-client";
-import { useEffect } from "react";
+import { createChats } from "../../../apiCalls/chat";
+import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import store from "../../../redux/store";
+import { setAllChats, setSelectedChat } from "../../../redux/userSlice";
 
 type Props = {
   searchKey: string;

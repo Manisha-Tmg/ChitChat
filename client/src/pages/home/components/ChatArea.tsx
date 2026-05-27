@@ -1,11 +1,11 @@
+import moment from "moment";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import type { Socket } from "socket.io-client";
+import { clearUnreadMessageCount } from "../../../apiCalls/chat";
 import { createMessage, getAllMessages } from "../../../apiCalls/message";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
-import { useEffect, useState } from "react";
-import moment from "moment";
-import { clearUnreadMessageCount } from "../../../apiCalls/chat";
-import type { Socket } from "socket.io-client";
 import store from "../../../redux/store";
 
 type Props = {
