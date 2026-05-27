@@ -34,11 +34,11 @@ const ChatArea = ({ socket }: Props) => {
         ...msg,
         members: selectedChats.members.map((m: any) => m._id),
         read: false,
-        createdAt: moment().format("DD-MM-YYYY HH:mm:ss"),
+        createdAt: moment().format("YYYY-MM-DD HH:mm:ss"),
       });
       await createMessage(msg);
       setMessage("");
-      await getMessages();
+      // await getMessages();
     } catch (error: any) {
       dispatch(hideLoader());
       toast.error(error.message);
@@ -97,9 +97,9 @@ const ChatArea = ({ socket }: Props) => {
 
     socket.on("receive-msg", handler);
 
-    return () => {
-      socket.off("receive-msg", handler);
-    };
+    // return () => {
+    //   socket.off("receive-msg", handler);
+    // };
   }, [selectedChats]);
   useEffect(() => {
     const msgContainer = document.getElementById("main-chat-area");

@@ -1,11 +1,18 @@
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { createChats } from "../../../apiCalls/chat";
+import { clearUnreadMessageCount, createChats } from "../../../apiCalls/chat";
 import { hideLoader, showLoader } from "../../../redux/loaderSlice";
 import { setAllChats, setSelectedChat } from "../../../redux/userSlice";
 import moment from "moment";
+import type { Socket } from "socket.io-client";
+import { useEffect } from "react";
+import store from "../../../redux/store";
 
-const UserList = ({ searchKey }: { searchKey: string }) => {
+type Props = {
+  searchKey: string;
+  socket: Socket;
+};
+const UserList = ({ searchKey, socket }: Props) => {
   const allUsers = useSelector((state: any) => state.user.allUsers);
   const allChat = useSelector((state: any) => state.user.allChats);
   const currentUser = useSelector((state: any) => state.user.user);
@@ -119,6 +126,26 @@ const UserList = ({ searchKey }: { searchKey: string }) => {
             user.lastName.toLowerCase().includes(searchKey.toLowerCase()),
         );
   }
+
+  useEffect(() => {
+    socket.on("receive-msg", (message) => {
+      const selectedChats = store.getState().user.selectedChat as any;
+      const allChat = store.getState().user.allChats as any;
+      if (selectedChats?._id !== message.chatId) {
+        const updatedChat = allChat.map((chat: any) => {
+          if (chat._id === message.chatId) {
+            return {
+              ...chat,
+              unreadMessageCount: (chat?.unreadMessageCount || 0) + 1,
+              lastMessage: message,
+            };
+          }
+          return chat;
+        });
+        dispatch(setAllChats(updatedChat));
+      }
+    });
+  }, []);
   return (
     <>
       {getData()?.map((obj: any, index: number) => {

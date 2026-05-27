@@ -20,7 +20,7 @@ const Home = () => {
     <div className="home-page">
       <Header />
       <div className="main-content">
-        <SideBar />
+        <SideBar socket={socket} />
         {selectedChats && <ChatArea socket={socket} />}
       </div>
     </div>

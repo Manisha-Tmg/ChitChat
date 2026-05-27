@@ -1,8 +1,12 @@
 import { useState } from "react";
 import Search from "./components/Search";
 import UserList from "./components/UserList";
+import type { Socket } from "socket.io-client";
 
-const SideBar = () => {
+type Props = {
+  socket: Socket;
+};
+const SideBar = ({ socket }: Props) => {
   const [searchKey, setSearchKey] = useState("");
 
   return (
@@ -10,7 +14,7 @@ const SideBar = () => {
       <Search searchKey={searchKey} setSearchKey={setSearchKey}></Search>
       <UserList
         searchKey={searchKey}
-        // socket={socket}
+        socket={socket}
         // onlineUser={onlineUser}
       ></UserList>
     </div>
