@@ -65,6 +65,12 @@ export class App {
           .to(data?.members[1])
           .emit("msg-count-clear", data);
       });
+      socket.on("user-typing", (data) => {
+        this.io
+          .to(data?.members[0])
+          .to(data?.members[1])
+          .emit("started-typing", data);
+      });
 
       // console.log("connected with Socket ID: " + socket.id);
 

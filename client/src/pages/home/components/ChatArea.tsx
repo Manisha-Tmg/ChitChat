@@ -28,8 +28,8 @@ const ChatArea = ({ socket }: Props) => {
   const selectedUser = selectedChats?.members.find(
     (u: any) => u._id !== user._id,
   );
-
   const [message, setMessage] = useState<string>("");
+  const [isTyping, setIsTyping] = useState<boolean>(false);
   const [allMessages, setAllMessages] = useState<Message[]>([]);
 
   const dispatch = useDispatch();
@@ -138,16 +138,26 @@ const ChatArea = ({ socket }: Props) => {
         });
       }
     });
+
+    socket.on("started-typing", (data) => {
+      if (selectedChats?._id === data.chatId && data.sender !== user._id) {
+        setIsTyping(true);
+        setTimeout(() => {
+          setIsTyping(false);
+        }, 2000);
+      }
+    });
     return () => {
       socket.off("receive-msg", handler);
     };
   }, [selectedChats]);
+
   useEffect(() => {
     const msgContainer = document.getElementById("main-chat-area");
     if (msgContainer) {
       msgContainer.scrollTop = msgContainer.scrollHeight;
     }
-  }, [allMessages]);
+  }, [allMessages, isTyping]);
 
   const formatTime = (timeStamp: string) => {
     const messageTime = moment(timeStamp);
@@ -221,6 +231,9 @@ const ChatArea = ({ socket }: Props) => {
                 </div>
               );
             })}
+            <div className="typing-indicator">
+              {isTyping && <i>typing.....</i>}
+            </div>
           </div>
           <div className="send-message-div">
             <input
@@ -230,6 +243,12 @@ const ChatArea = ({ socket }: Props) => {
               value={message}
               onChange={(e) => {
                 setMessage(e.target.value);
+
+                socket.emit("user-typing", {
+                  chatId: selectedChats._id,
+                  members: selectedChats.members.map((m: any) => m._id),
+                  sender: user._id,
+                });
               }}
             />
             <button
